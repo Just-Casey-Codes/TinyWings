@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+{% block title %}My dragons{% endblock %}
+{% block body_class %}logged-screen{% endblock %}
+{% include 'logged-in-header.html' %}
+
+{% block content %}
+<div class="col-md-11">
+<div class="welcome-banner">
+  <h1 class="fantasy-welcome">{{ current_user.username }}'s Dragons!</h1>
+  <p class="fantasy-subtext">Click on a dragon to look after them </p>
+</div>
+<div class="px-4 pt-0 mt-4 text-center">
+    <div class="img-container">
+            <img src="{{ url_for('static', filename='images/dragon_area.png')}}"  class="parent-img img-fluid  rounded-3 mb-1" alt="Map of Nestoria" loading="lazy" >
+            {% if dragons %}
+            {% for dragon in dragons %}
+                <a href="{{url_for('care_for', dragon=dragon)}}" class="{{ dragon|lower }}">
+                <img src="{{ url_for('static', filename='dragons/' ~dragon~ '.png')}}" width=200 class=" img-fluid  rounded-3 mb-1" alt="{{dragon}}" loading="lazy" >
+                </a>
+            {% endfor %}
+            {% endif %}
+    </div>
+</div>
+</div>
+
+
+
+{% include 'footer.html' %}
+{% endblock %}

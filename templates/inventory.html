@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}TinyWings{% endblock %}
+{% include 'logged-in-header.html' %}
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-1">
+<div class="d-flex flex-column flex-shrink-0 bg-body-tertiary" style="width: 4.5rem;">
+  <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+ <li>
+  <a href="{{url_for('inventory_eggs')}}" class="styled-tooltip nav-link py-3 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dashboard" data-bs-original-title="Dashboard">
+    <span class="tooltip-text">Hatchery</span>
+      <img src="{{ url_for('static', filename='images/egg2.png')}}" width="100" >
+  </a> </li>
+      <li>
+  <a href="#" class="styled-tooltip nav-link py-3 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dashboard" data-bs-original-title="Dashboard">
+    <span class="tooltip-text">Food</span>
+      <img src="{{ url_for('static', filename='images/food.png')}}" width="100" >
+  </a> </li>
+      <li>
+  <a href="#" class="styled-tooltip nav-link py-3 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Orders" data-bs-original-title="Orders">
+    <span class="tooltip-text">Toys</span>
+      <img src="{{ url_for('static', filename='images/toy.png')}}" width="100" >
+  </a>
+</li>
+  </ul>
+</div>
+    </div>
+    <div class="col-md-11">
+      <div class="welcome-banner">
+  <h1 class="fantasy-welcome">Inventory</h1>
+</div>
+<div class="px-4 pt-0 mt-4 text-center">
+    <div class="overflow-hidden">
+            <img src="{{ url_for('static', filename='images/inventory.png')}}" width=800 class="img-fluid  rounded-3 mb-1" alt="Map of Nestoria" loading="lazy" >
+    </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+{% include 'footer.html' %}
+{% endblock %}

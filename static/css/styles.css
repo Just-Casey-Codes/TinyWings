@@ -1,0 +1,421 @@
+.pink {
+color: #FF9898 !important;
+}
+.pastel {
+  color: #FFD8D8 !important;
+}
+.white {
+  color: white !important;
+}
+.meie-script-regular {
+  font-family: "Meie Script", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+.sevillana-regular {
+  font-family: "Sevillana", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+.heading {
+  font-family: 'Sevillana', cursive;
+  font-size: 3rem;
+  text-align: center;
+  color: #FFDCDC;
+  text-shadow: 1px 1px 2px #FFF2EB;
+  margin-top: 2rem;
+}
+body {
+  background-image: url("../images/clouds.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.logged-screen {
+  background-image: url("/static/images/castle.png") !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+}
+footer {
+    position: relative;
+}
+.hatching-page {
+    background-image: url("../images/who-will-hatch.png") !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center 70%;
+}
+.map-color {
+    color: #FDFAF6 !important
+}
+.narrow-text {
+  max-width: 400px;
+}
+.btn {
+    background-color: #FF9898 !important;
+    border: none !important;
+    color: white !important;
+}
+
+.btn:hover {
+    background-color: #FFD8D8 !important;
+}
+main {
+max-width: 800px;
+margin: 2rem auto;
+padding: 1rem;
+}
+.card {
+	background-image: url("../images/clouds.png") !important;
+	cursor: pointer;
+	background-size: cover;
+    background-repeat: no-repeat;
+	width: calc(33% - 3rem);
+	min-width: calc(33% - 3rem);
+	height: 600px;
+	width: 400px;
+	min-height: 400px;
+	perspective: 1000px;
+	margin: 1rem auto;
+	position: relative;
+}
+.carousel-item {
+  height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 0;
+  position: relative;
+}
+.carousel-inner {
+  position: relative;
+  overflow: hidden;
+}
+.carousel-item.active {
+  z-index: 1;
+}
+.carousel-item:not(.active) .card {
+  pointer-events: none;
+  transform: none !important;
+}
+.carousel-control-next-icon {
+  height: 100px;
+  width: 100px;
+  outline: #FF9898;
+  background-size: 100%, 100%;
+  border-radius: 50%;
+  background-image: url("../images/arrow-right.png") !important;
+}
+.carousel-control-prev-icon {
+  height: 100px;
+  width: 100px;
+  outline: #FF9898;
+  background-size: 100%, 100%;
+  border-radius: 50%;
+  background-image: url("../images/arrow-left.png") !important;
+}
+.front video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.front, .back {
+	 display: flex;
+	 border-radius: 6px;
+	 background-position: center;
+	 background-size: cover;
+	 text-align: center;
+	 justify-content: center;
+	 align-items: center;
+	 position: absolute;
+	 height: 100%;
+	 width: 100%;
+	 -webkit-backface-visibility: hidden;
+	 backface-visibility: hidden;
+	 transform-style: preserve-3d;
+	 transition: ease-in-out 600ms;
+}
+.front {
+	 background-size: cover;
+	 font-size: 1.618rem;
+	 font-weight: 600;
+	 color: #fff;
+	 overflow: hidden;
+	 font-family: Poppins, sans-serif;
+	 overflow: hidden
+}
+
+ .card.flipped .front {
+	 transform: rotateY(180deg);
+}
+ .card:nth-child(even).flipped .front {
+	 transform: rotateY(-180deg);
+}
+ .back {
+	 background-size: cover;
+	 transform: rotateY(-180deg);
+}
+.back img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+ .card.flipped .back {
+	 transform: rotateY(0deg);
+}
+ .card:nth-child(even) .back {
+	 transform: rotateY(180deg);
+}
+ .card:nth-child(even).flipped .back {
+	 transform: rotateY(0deg);
+}
+.front video,
+.front img,
+.back video,
+.back img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* important! */
+    border-radius: 6px;
+}
+
+
+.welcome-banner {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 2rem 1rem;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(240, 220, 255, 0.4));
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(173, 148, 255, 0.3);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.small-banner {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 2rem 1rem;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(240, 220, 255, 0.4));
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(173, 148, 255, 0.3);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.fantasy-welcome {
+  font-family: 'Sevillana', cursive;
+  font-size: 3rem;
+  color: #B5828C;
+  text-shadow: 1px 1px 4px #fff;
+  margin-bottom: 0.5rem;
+}
+
+.fantasy-subtext {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.25rem;
+  color: #555;
+  opacity: 0.85;
+}
+.hover-info {
+  display: none;
+  position: absolute;
+  background: url('/static/images/parchment-bg.png') no-repeat center center;
+  background-size: cover;
+  padding: 20px;
+  font-family: 'Sevillana', cursive;
+  font-size: 1.2rem;
+  color: #4b2e1e;
+  border: 2px solid #d6b77d;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  max-width: 300px;
+  z-index: 1000;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+#hover-tooltip {
+  z-index: 999;
+  pointer-events: auto;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.hover-info.active {
+  display: block;
+}
+.map-region {
+  position: absolute;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 20;
+}
+.img-container {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.parent-img {
+  width: 100%;
+  display: block;
+}
+
+.ontop-img {
+  position: absolute;
+  top: 16%;
+  left: 35%;
+  width: 40%;
+  pointer-events: none;
+}
+
+.lunabloom {
+  position: absolute;
+  top: 29%;
+  left: -10%;
+  width: 40%;
+  z-index: 10;
+}
+.plume {
+  position: absolute;
+  top: 53%;
+  left: 10%;
+  width: 40%;
+  z-index: 10;
+}
+.ashwin {
+  position: absolute;
+  top: 20%;
+  left: 70%;
+  width: 40%;
+  z-index: 10;
+}
+.embrick {
+  position: absolute;
+  top: 65%;
+  left: 65%;
+  width: 40%;
+  z-index: 10;
+}
+.kyros {
+  position: absolute;
+  top: 0%;
+  left: 10%;
+  width: 40%;
+  z-index: 10;
+}
+.glistra {
+  position: absolute;
+  top: 65%;
+  left: 30%;
+  width: 40%;
+  z-index: 10;
+}
+.yulani {
+  position: absolute;
+  top: 0%;
+  left: 45%;
+  width: 40%;
+  z-index: 10;
+}
+.morrowin {
+  position: absolute;
+  top: 30%;
+  left: 45%;
+  width: 40%;
+  z-index: 10;
+}
+.plant {
+  position: absolute;
+  top: 35%;
+  left: 10%;
+  width: 40%;
+  z-index: 10;
+}
+.plant2 {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  width: 40%;
+  z-index: 10;
+}
+.plant3 {
+  position: absolute;
+  top: 20%;
+  left: 5%;
+  width: 40%;
+  z-index: 10;
+}
+.plant4 {
+  position: absolute;
+  top: 16%;
+  left: 35%;
+  width: 40%;
+  z-index: 10;
+}
+.styled-tooltip {
+  position: relative;
+  text-decoration: none;
+  color: #6b4c8b;
+  font-family: 'Sevillana', cursive;
+}
+
+.styled-tooltip .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: url('/static/images/parchment-bg.png') no-repeat center;
+  background-size: cover;
+  color: #4b2e1e;
+  font-size: 1rem;
+  padding: 8px 12px;
+  border: 2px solid #d6b77d;
+  border-radius: 10px;
+  white-space: nowrap;
+  z-index: 1000;
+  box-shadow: 0 5px 12px rgba(0,0,0,0.3);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.styled-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+..stat-bar {
+  margin-bottom: 1rem;
+  font-weight: bold;
+  width: 300px;
+}
+
+.bar-outer {
+  width: 100%;
+  height: 20px;
+  background-color: #E55050;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bar-inner {
+  height: 100%;
+  transition: width 0.4s ease-in-out;
+}
+
+.bar-inner.hunger {
+  background-color: #A1EEBD;
+}
+
+.bar-inner.happiness {
+  background-color: #A1EEBD;
+}
+#countdown {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 1rem 0;
+}

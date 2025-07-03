@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Map{% endblock %}
+{% include 'header.html' %}
+{% block content %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const tooltip = document.getElementById("hover-tooltip");
+    const regions = document.querySelectorAll('.map-region');
+    const mapContainer = document.getElementById('map-container');
+
+    const areaRegions = {
+      "pond": "🐸 The Pond: Calm waters where dragon tadpoles play.",
+      "mushroom-forest": "🍄 Mushroom Forest: Perfect for a cozy dragon nap.",
+      "wishing-well": "✨ Wishing Well: Whisper your wish, it may come true!",
+      "sleeping-forest": "😴 Sleeping Forest: Ancient trees and deep dreams.",
+      "crystal-peaks": "💎 Crystal Manor: Home of the royal dragon scholars.",
+      "farm": "🐔 Farm: A cozy place for foraging and fresh eggs!",
+      "open-field": "🌾 Open Field: So much space to stretch your wings!"
+    };
+
+    regions.forEach(region => {
+      region.addEventListener("mouseenter", () => {
+        const name = region.dataset.region;
+        tooltip.innerText = areaRegions[name] || "🌟 Unknown Area";
+        tooltip.classList.add("active");
+      });
+
+      region.addEventListener("mousemove", (e) => {
+        const containerRect = mapContainer.getBoundingClientRect();
+        const offsetX = e.clientX - containerRect.left;
+        const offsetY = e.clientY - containerRect.top;
+        tooltip.style.left = `${offsetX + 15}px`;
+        tooltip.style.top = `${offsetY - 40}px`;
+      });
+
+      region.addEventListener("mouseleave", () => {
+        tooltip.classList.remove("active");
+      });
+    });
+  });
+</script>
+
+<map name="image-map">
+    <area data-region="farm" alt="farm" title="farm" href="#" coords="170,842,24" shape="circle">
+    <area data-region="pond" alt="pond" title="pond" href="#" coords="857,927,24" shape="circle">
+    <area data-region="crystal-peaks" alt="crystal peaks" title="crystal peaks" href="#" coords="499,910,29" shape="circle">
+    <area data-region="open-field" alt="open field" title="open field" href="#" coords="607,657,29" shape="circle">
+    <area data-region="wishing-well" alt="wishing well" title="wishing well" href="#" coords="878,337,24" shape="circle">
+    <area data-region="sleeping-forest" alt="sleeping forest" title="sleeping forest" href="#" coords="1026,510,21" shape="circle">
+    <area data-region="mushroom-forest" alt="Mushroom forest" title="Mushroom forest" href="#" coords="299,495,33" shape="circle">
+</map>
+
+<div class="welcome-banner">
+    <h1 class="fantasy-welcome">Where will your wings take you?</h1>
+     <p class="fantasy-subtext">A World Awaits Beyond the Clouds </p>
+</div>
+<div class="px-4 pt-0 mt-0 text-center">
+<div id="map-container" style="position: relative; display: inline-block;">
+  <img src="/static/images/map3.png" width="800" usemap="#image-map" class="img-fluid rounded-3 mb-1" alt="Map of Nestoria">
+  <div class="map-region" data-region="farm" style="left: 9.25%; top: 72.25%; width: 6%; height: 6%;"></div>
+  <div class="map-region" data-region="pond" style="left: 55.13%; top: 77.88%; width: 6%; height: 6%;"></div>
+  <div class="map-region" data-region="crystal-peaks" style="left: 30.75%; top: 77.13%; width: 7.25%; height: 7.25%;"></div>
+  <div class="map-region" data-region="open-field" style="top: 54.50%; left: 38.00%; width: 7.25%; height: 7.25%;"></div>
+  <div class="map-region" data-region="wishing-well" style="top: 26.13%; left: 56.75%; width: 6.00%; height: 6.00%;"></div>
+  <div class="map-region" data-region="sleeping-forest" style="top: 42.13%; left: 66.63%; width: 5.25%; height: 5.25%;"></div>
+  <div class="map-region" data-region="mushroom-forest" style="top: 40%; left: 15%; width:8.25%; height: 8.25%;"></div>
+
+  <div id="hover-tooltip" class="hover-info"></div>
+</div>
+</div>
+
+{% include 'footer.html' %}
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+{% block title %}My dragons{% endblock %}
+{% block body_class %}logged-screen{% endblock %}
+{% include 'logged-in-header.html' %}
+
+{% block content %}
+{% if show_script %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const dragonVideo = document.getElementById("dragon-video");
+    const baseVideo = "{{ url_for('static', filename='videos/' + dragon.name + '.mp4') }}";
+    const feedVideo = "{{ url_for('static', filename='care/' + dragon.name + '_eat.mp4') }}";
+    const playVideo = "{{ url_for('static', filename='care/' + dragon.name + '_play.mp4') }}";
+    const videoSource = dragonVideo.querySelector("source")
+
+    function playTempVideo(tempUrl) {
+      videoSource.src = tempUrl;
+      dragonVideo.load();
+      dragonVideo.play();
+
+      setTimeout(() => {
+        videoSource.src = baseVideo;
+        dragonVideo.load();
+        dragonVideo.play();
+      }, 6000);
+    }
+
+    {% if action_done == "feed" %}
+      playTempVideo(feedVideo);
+    {% elif action_done == "play" %}
+      playTempVideo(playVideo);
+    {% endif %}
+  });
+</script>
+{% endif %}
+
+
+<div class="welcome-banner">
+  <h1 class="fantasy-welcome">{{dragon.name}} 𖹭</h1>
+</div>
+<div class="d-flex justify-content-center align-items-center mt-4">
+  <div class="text-center">
+<video id="dragon-video" width="400" autoplay loop muted>
+  <source src="{{ url_for('static', filename='videos/' ~ dragon.name ~ '.mp4') }}" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+      <div class="stat-bar">
+  <span>Hunger: {{care.hunger}}%</span>
+  <div class="bar-outer">
+    <div class="bar-inner hunger" style="width: {{ care.hunger }}%;"></div>
+  </div>
+</div>
+
+<div class="stat-bar">
+  <span>Happiness: {{care.happiness}}%</span>
+  <div class="bar-outer">
+    <div class="bar-inner happiness" style="width: {{ care.happiness }}%;"></div>
+  </div>
+</div>
+</div>
+<br>
+<div class="d-flex flex-column align-items-center">
+  <form method="POST" action="{{ url_for('care_for') }}">
+  <input type="hidden" name="action" value="feed">
+    <input type="hidden" name="dragon" value="{{ dragon.name }}">
+  <button type="submit" class="btn btn-success" id="feed-button">Feed</button>
+</form>
+
+<form method="POST" action="{{ url_for('care_for') }}">
+  <input type="hidden" name="action" value="play">
+  <input type="hidden" name="dragon" value="{{ dragon.name }}">
+  <button type="submit" class="btn btn-primary" id="play-button">Play</button>
+</form>
+  {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <h5 class="sevillana-regular" style="color:#722323"> {{message }} </h5>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+</div>
+</div>
+{% include 'footer.html' %}
+{% endblock %}

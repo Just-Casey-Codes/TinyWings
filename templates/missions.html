@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Map{% endblock %}
+{% include 'logged-in-header.html' %}
+{% block content %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const tooltip = document.getElementById("hover-tooltip");
+    const regions = document.querySelectorAll('.map-region');
+    const mapContainer = document.getElementById('map-container');
+    const userDragons = {{ user_dragons | tojson }};
+
+    const areaRegions = {
+      "pond": "🐸 The Pond: Calm waters where dragons play.<br> Find fresh food and cute toys.",
+      "mushroom-forest": "🍄 Mushroom Forest: Perfect for a cozy dragon nap.<br>Pixies leave out small bags of food and toys.",
+      "wishing-well": "✨ Wishing Well: Whisper your wish, it may come true!<br>Dream big to find an egg<br> Large bundles of fruit or bags of toys!",
+      "sleeping-forest": "😴 Sleeping Forest: Ancient trees and deep dreams. <br> Nature sprites leave fresh food and cute toys",
+      "crystal-peaks": "💎 Crystal Peaks:<br>High chance to discover a dragon egg.<br>Large bundles of dragon food.<br>A trove of magical toys to keep your dragons happy.",
+      "farm": "🐔 Farm: A cozy place for foraging!<br>Find a small bag of food or toys.",
+      "open-field": "🌾 Open Field: So much space to stretch your wings!<br>Send your dragons here to refill their hunger and happiness!"
+    };
+
+    regions.forEach(region => {
+      region.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const name = region.dataset.region;
+        const containerRect = mapContainer.getBoundingClientRect();
+        const offsetX = e.clientX - containerRect.left;
+        const offsetY = e.clientY - containerRect.top;
+
+        let dragonOptions = userDragons.length > 0
+  ? userDragons.map(dragon => `
+      <option value="${dragon.id}">${dragon.name}</option>
+    `).join('')
+  : '<option disabled>No available dragons</option>';
+
+tooltip.innerHTML = `
+  <p>${areaRegions[name] || "🌟 Unknown Area"}</p>
+  <form action="/missions" method="POST">
+    <input type="hidden" name="region" value="${name}">
+    <select name="dragon_id" class="form-select form-select-sm mt-2" ${userDragons.length === 0 ? 'disabled' : ''}>
+      ${dragonOptions}
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm mt-2" ${userDragons.length === 0 ? 'disabled' : ''}>
+      Send Dragon
+    </button>
+  </form>
+`;
+        tooltip.style.position = "absolute";
+        tooltip.style.left = `${offsetX + 15}px`;
+  tooltip.style.top = `${offsetY - 40}px`;
+  tooltip.classList.add("active");;
+      });
+    });
+    document.addEventListener("click", (event) => {
+  // If the click is *outside* the tooltip, hide it
+  if (!tooltip.contains(event.target)) {
+    tooltip.classList.remove("active");
+  }
+});
+    });
+</script>
+
+<map name="image-map">
+    <area data-region="farm" alt="farm" title="farm" href="#" coords="170,842,24" shape="circle">
+    <area data-region="pond" alt="pond" title="pond" href="#" coords="857,927,24" shape="circle">
+    <area data-region="crystal-peaks" alt="crystal peaks" title="crystal peaks" href="#" coords="499,910,29" shape="circle">
+    <area data-region="open-field" alt="open field" title="open field" href="#" coords="607,657,29" shape="circle">
+    <area data-region="wishing-well" alt="wishing well" title="wishing well" href="#" coords="878,337,24" shape="circle">
+    <area data-region="sleeping-forest" alt="sleeping forest" title="sleeping forest" href="#" coords="1026,510,21" shape="circle">
+    <area data-region="mushroom-forest" alt="Mushroom forest" title="Mushroom forest" href="#" coords="299,495,33" shape="circle">
+</map>
+
+<div class="welcome-banner">
+    <h1 class="fantasy-welcome">Tiny Wings, Mighty Missions!</h1>
+     <p class="fantasy-subtext">Even the tiniest wings can change the skies. </p>
+</div>
+<div class="px-4 pt-0 mt-0 text-center">
+    <p class="fantasy-subtext">Who is ready for an adventure? </p>
+<div id="map-container" style="position: relative; display: inline-block;">
+  <img src="/static/images/map3.png" width="800" usemap="#image-map" class="img-fluid rounded-3 mb-1" alt="Map of Nestoria">
+  <div class="map-region" data-region="farm" style="left: 9.25%; top: 72.25%; width: 6%; height: 6%;"></div>
+  <div class="map-region" data-region="pond" style="left: 55.13%; top: 77.88%; width: 6%; height: 6%;"></div>
+  <div class="map-region" data-region="crystal-peaks" style="left: 30.75%; top: 77.13%; width: 7.25%; height: 7.25%;"></div>
+  <div class="map-region" data-region="open-field" style="top: 54.50%; left: 38.00%; width: 7.25%; height: 7.25%;"></div>
+  <div class="map-region" data-region="wishing-well" style="top: 26.13%; left: 56.75%; width: 6.00%; height: 6.00%;"></div>
+  <div class="map-region" data-region="sleeping-forest" style="top: 42.13%; left: 66.63%; width: 5.25%; height: 5.25%;"></div>
+  <div class="map-region" data-region="mushroom-forest" style="top: 40%; left: 15%; width:8.25%; height: 8.25%;"></div>
+
+  <div id="hover-tooltip" class="hover-info"></div>
+</div>
+</div>
+
+{% include 'footer.html' %}
+{% endblock %}

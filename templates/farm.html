@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}TinyWings{% endblock %}
+{% block body_class %}hatching-page{% endblock %}
+{% include 'logged-in-header.html' %}
+{% block content %}
+<main class=" px-3">
+    <div class="welcome-banner">
+    <h1 class="fantasy-welcome">{{current_user.username}}'s Farm</h1>
+     <p class="fantasy-subtext">Where dragon snacks begin </p>
+    </div>
+    <div class="d-flex flex-column align-items-center">
+        <form method="POST">
+            {% if button_text == "Plant" %}
+            <button class="btn btn-success" type="submit" name="action" value="Plant">
+            🌱 Plant
+            </button>
+            {% endif %}
+            {% if button_text == "Harvest" %}
+              <button class="btn btn-warning" type="submit" name="action" value="Harvest">
+                🌾 Harvest
+              </button>
+            {% endif %}
+            <div id="countdown">
+            {% if timer %}
+                🌱 Ready in <span id="time">{{ timer | round }}</span> seconds
+            {% endif %}
+</div>
+
+</form>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <h5 class="sevillana-regular" style="color:#722323"> {{message }} </h5>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+    <div class="img-container">
+            <img src="{{ url_for('static', filename='images/farm.png')}}"  class="parent-img img-fluid  rounded-3 mb-1" alt="Map of Nestoria" loading="lazy" >
+            {% if not button_text %}
+                <img src="{{ url_for('static', filename='images/sprout.png')}}" width=200 class="plant img-fluid  rounded-3 mb-1" alt="sprout" loading="lazy" >
+                <img src="{{ url_for('static', filename='images/sprout.png')}}" width=200 class="plant2 img-fluid  rounded-3 mb-1" alt="sprout" loading="lazy" >
+                <img src="{{ url_for('static', filename='images/sprout.png')}}" width=200 class="plant3 img-fluid  rounded-3 mb-1" alt="sprout" loading="lazy" >
+                <img src="{{ url_for('static', filename='images/sprout.png')}}" width=200 class="plant4 img-fluid  rounded-3 mb-1" alt="sprout" loading="lazy" >
+            {% endif %}
+            {% if button_text == "Harvest" %}
+                <img src="{{ url_for('static', filename='images/crop.png')}}" width=200 class="plant img-fluid  rounded-3 mb-1" alt="crop" loading="lazy" >
+                <img src="{{ url_for('static', filename='images/crop.png')}}" width=200 class="plant2 img-fluid  rounded-3 mb-1" alt="crop" loading="lazy" >
+                <img src="{{ url_for('static', filename='images/crop.png')}}" width=200 class="plant3 img-fluid  rounded-3 mb-1" alt="crop" loading="lazy" >
+                <img src="{{ url_for('static', filename='images/crop.png')}}" width=200 class="plant4 img-fluid  rounded-3 mb-1" alt="crop" loading="lazy" >
+            {% endif %}
+    </div>
+</main>
+{% if timer %}
+{% if timer and not button_text %}
+<script>
+  let timeLeft = Math.round({{ timer }});
+  const timeDisplay = document.getElementById("time");
+  const countdownDiv = document.getElementById("countdown");
+
+  const interval = setInterval(() => {
+    timeLeft -= 1;
+    if (timeLeft <= 0) {
+      clearInterval(interval);
+      countdownDiv.innerHTML = "<strong>🌾 Ready to harvest!</strong>";
+
+      // Reload to show the Harvest button
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } else {
+      if (timeDisplay) timeDisplay.textContent = timeLeft;
+    }
+  }, 1000);
+</script>
+{% endif %}
+{% endif %}
+{% include 'footer.html' %}
+{% endblock %}

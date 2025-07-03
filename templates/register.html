@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+{% block title %}Sign in{% endblock %}
+{% include 'header.html' %}
+{% block content %}
+<main>
+<div class="container">
+  <div class="row">
+<div class="welcome-banner">
+  <h1 class="fantasy-welcome">Welcome to Nestoria!</h1>
+  <p class="fantasy-subtext">Join the adventure below!🪺 </p>
+</div>
+    <div class="col-sm-12 col-md-8">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <h5 class="sevillana-regular" style="color:#722323"> {{message }} </h5>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    {{ render_form(sign_up, action=url_for('register'), method='post')  }}
+
+</div>
+  </div>
+</div>
+  </main>
+{% include 'footer.html' %}
+{% endblock %}

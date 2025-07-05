@@ -632,7 +632,7 @@ def user_dragons():
     owned_dragons = db.session.execute(
         db.select(DragonsOwned).where(DragonsOwned.user_id == user_id)
     ).scalars().all()
-    dragon_names = [d.dragon_obj.name for d in owned_dragons if d.dragon_obj]
+    dragon_names = [d.dragon_obj.name.lower() for d in owned_dragons if d.dragon_obj]
     if dragon_names:
         return render_template("user-dragons.html", dragons=dragon_names)
     else:

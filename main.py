@@ -543,7 +543,7 @@ def claim_reward():
         if mission.region == "farm" or mission.region == "mushroom-forest":
             now = datetime.utcnow()
             time_elapsed = (now - mission.time_started).total_seconds()
-            if time_elapsed < 10:
+            if time_elapsed < 1200:
                 pass
             else:
                 mission.dragon_on_mission = "no"
@@ -557,7 +557,7 @@ def claim_reward():
         elif mission.region == "pond" or mission.region == "sleeping-forest":
             now = datetime.utcnow()
             time_elapsed = (now - mission.time_started).total_seconds()
-            if time_elapsed < 20:
+            if time_elapsed < 3600:
                 pass
             else:
                 mission.dragon_on_mission = "no"
@@ -585,7 +585,7 @@ def claim_reward():
         elif mission.region == "open-field":
             now = datetime.utcnow()
             time_elapsed = (now - mission.time_started).total_seconds()
-            if time_elapsed < 20:
+            if time_elapsed < 1080:
                 pass
             else:
                 mission.dragon_on_mission = "no"
@@ -607,11 +607,11 @@ def claim_reward():
         time_elapsed = (now - mission.time_started).total_seconds()
         required_time = 0
         if mission.region in ["farm", "mushroom-forest"]:
-            required_time = 10
+            required_time = 1080
         elif mission.region in ["pond", "sleeping-forest","open-field"]:
-            required_time = 20
+            required_time = 2000
         elif mission.region in ["wishing-well", "crystal-peaks"]:
-            required_time = 30
+            required_time = 3600
 
         time_left = max(0, int(required_time - time_elapsed))
 
@@ -794,7 +794,7 @@ def farm():
     time_since_planted = 0
     if state.planted_at:
         time_since_planted = (now - state.planted_at).total_seconds()
-        time_left = max(0, 30 - time_since_planted)
+        time_left = max(0, 18000 - time_since_planted)
     if request.method == "POST":
         action = request.form.get("action")
         if action == "Plant" and state.harvested:
@@ -807,7 +807,7 @@ def farm():
 
         elif action == "Harvest" and not state.harvested:
             time_since_planted = (now - state.planted_at).total_seconds()
-            if time_since_planted >= 30:
+            if time_since_planted >= 18000:
                 state.harvested = True
                 state.planted_at = None
                 new_item = UserInventory(
@@ -825,7 +825,7 @@ def farm():
             time_left = 0
         else:
             button_text = None
-            time_left = 30 - time_since_planted
+            time_left = 18000 - time_since_planted
     else:
         button_text = "Plant"
         time_left = None

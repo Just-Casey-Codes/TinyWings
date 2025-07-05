@@ -19,7 +19,7 @@
         </div>
 <div class="px-4 pt-0 mt-4 text-center">
     <div class="img-container">
-        <img src="{{ url_for('static', filename='images/nest.png')}}" width=800 class="parent-img img-fluid  rounded-3 mb-1" alt="Dragon Nest" loading="lazy" >
+        <img src="{{ url_for('static', filename='images/nest.webp')}}" width=800 class="parent-img img-fluid  rounded-3 mb-1" alt="Dragon Nest" loading="lazy" >
         {% if eggs> 0 %}
         <img src="{{ url_for('static', filename='images/egg2.png') }}" alt="Dragon Egg" class="ontop-img">
         <form action="{{ url_for('inventory_eggs') }}" method="POST" style=" text-align: center;">

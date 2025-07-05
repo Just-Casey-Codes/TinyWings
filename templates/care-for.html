@@ -4,36 +4,6 @@
 {% include 'logged-in-header.html' %}
 
 {% block content %}
-{% if show_script %}
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const dragonVideo = document.getElementById("dragon-video");
-    const baseVideo = "{{ url_for('static', filename='videos/' + dragon.name + '.mp4') }}";
-    const feedVideo = "{{ url_for('static', filename='care/' + dragon.name + '_eat.mp4') }}";
-    const playVideo = "{{ url_for('static', filename='care/' + dragon.name + '_play.mp4') }}";
-    const videoSource = dragonVideo.querySelector("source")
-
-    function playTempVideo(tempUrl) {
-      videoSource.src = tempUrl;
-      dragonVideo.load();
-      dragonVideo.play();
-
-      setTimeout(() => {
-        videoSource.src = baseVideo;
-        dragonVideo.load();
-        dragonVideo.play();
-      }, 6000);
-    }
-
-    {% if action_done == "feed" %}
-      playTempVideo(feedVideo);
-    {% elif action_done == "play" %}
-      playTempVideo(playVideo);
-    {% endif %}
-  });
-</script>
-{% endif %}
-
 
 <div class="welcome-banner">
   <h1 class="fantasy-welcome">{{dragon.name}} 𖹭</h1>
@@ -73,5 +43,35 @@
 </form>
 </div>
 </div>
+
+{% if show_script %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const dragonVideo = document.getElementById("dragon-video");
+    const baseVideo = "{{ url_for('static', filename='videos/' + dragon.name + '.mp4') }}";
+    const feedVideo = "{{ url_for('static', filename='care/' + dragon.name + '_eat.mp4') }}";
+    const playVideo = "{{ url_for('static', filename='care/' + dragon.name + '_play.mp4') }}";
+    const videoSource = dragonVideo.querySelector("source")
+
+    function playTempVideo(tempUrl) {
+      videoSource.src = tempUrl;
+      dragonVideo.load();
+      dragonVideo.play();
+
+      setTimeout(() => {
+        videoSource.src = baseVideo;
+        dragonVideo.load();
+        dragonVideo.play();
+      }, 6000);
+    }
+
+    {% if action_done == "feed" %}
+      playTempVideo(feedVideo);
+    {% elif action_done == "play" %}
+      playTempVideo(playVideo);
+    {% endif %}
+  });
+</script>
+{% endif %}
 {% include 'footer.html' %}
 {% endblock %}

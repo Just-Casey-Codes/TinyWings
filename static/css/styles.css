@@ -26,9 +26,18 @@ color: #FF9898 !important;
   margin-top: 2rem;
 }
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
   background-image: url("../images/clouds.png");
   background-size: cover;
   background-repeat: no-repeat;
+}
+.page-wrapper {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 .logged-screen {
   background-image: url("/static/images/castle.png") !important;
@@ -63,6 +72,9 @@ main {
 max-width: 800px;
 margin: 2rem auto;
 padding: 1rem;
+}
+main.flex-fill {
+  flex: 1 1 auto;
 }
 .card {
 	background-image: url("../images/clouds.png") !important;

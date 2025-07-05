@@ -30,8 +30,13 @@
       {% endwith %}
 
 
-    {% block content %}{% endblock %}
-      {% block scripts %}
+    <main class="{% block main_class %}flex-fill{% endblock %}">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'footer.html' %}
+
+    {% block scripts %}
         {{ bootstrap.load_js() }}
     {% endblock %}
     </div>

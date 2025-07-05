@@ -1,4 +1,6 @@
 from email.policy import default
+
+import gunicorn
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
 from dotenv import load_dotenv
 import os

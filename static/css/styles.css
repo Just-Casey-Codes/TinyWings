@@ -209,6 +209,20 @@ padding: 1rem;
   text-shadow: 1px 1px 4px #fff;
   margin-bottom: 0.5rem;
 }
+.store-writing {
+  font-family: 'Sevillana', cursive;
+  font-size: 2rem;
+  color: #white;
+  text-shadow: 1px 1px 4px #fff;
+  margin-bottom: 0.5rem;
+}
+.store-subtext {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.25rem;
+  color: #000000;
+  opacity: 0.85;
+  text-shadow: 1px 1px 4px #fff
+}
 
 .fantasy-subtext {
   font-family: 'Poppins', sans-serif;
@@ -268,6 +282,35 @@ padding: 1rem;
   top: 16%;
   left: 35%;
   width: 40%;
+  pointer-events: none;
+}
+.inventory-egg {
+  position: absolute;
+  top: 77%;
+  left: 70%;
+  width: 10%;
+  pointer-events: none;
+}
+
+.inventory-seed {
+  position: absolute;
+  top: 77%;
+  left: 50%;
+  width: 10%;
+  pointer-events: none;
+}
+.inventory-toy {
+  position: absolute;
+  top: 75%;
+  left: 55%;
+  width: 10%;
+  pointer-events: none;
+}
+.inventory-food {
+  position: absolute;
+  top: 80%;
+  left: 30%;
+  width: 20%;
   pointer-events: none;
 }
 
@@ -418,4 +461,8 @@ padding: 1rem;
   font-size: 1.5rem;
   font-weight: bold;
   margin: 1rem 0;
+}
+.store-bg {
+  background: url('/static/images/parchment-bg.png') no-repeat center;
+  background-size: cover;
 }

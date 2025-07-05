@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block title %}TinyWings{% endblock %}
-{% block body_class %}hatching-page{% endblock %}
 {% include 'logged-in-header.html' %}
 {% block content %}
 <main class=" px-3">
@@ -27,13 +26,6 @@
 </div>
 
 </form>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-            <h5 class="sevillana-regular" style="color:#722323"> {{message }} </h5>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
     </div>
     <div class="img-container">
             <img src="{{ url_for('static', filename='images/farm.png')}}"  class="parent-img img-fluid  rounded-3 mb-1" alt="Map of Nestoria" loading="lazy" >

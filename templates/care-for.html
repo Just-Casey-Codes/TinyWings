@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% from 'bootstrap5/form.html' import render_form %}
 {% block title %}My dragons{% endblock %}
-{% block body_class %}logged-screen{% endblock %}
 {% include 'logged-in-header.html' %}
 
 {% block content %}
@@ -72,13 +71,6 @@
   <input type="hidden" name="dragon" value="{{ dragon.name }}">
   <button type="submit" class="btn btn-primary" id="play-button">Play</button>
 </form>
-  {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-            <h5 class="sevillana-regular" style="color:#722323"> {{message }} </h5>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
 </div>
 </div>
 {% include 'footer.html' %}

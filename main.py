@@ -1,5 +1,5 @@
 from email.policy import default
-from flask import Flask, render_template, url_for, request, redirect, flash
+from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
 from dotenv import load_dotenv
 import os
 from flask_bootstrap import Bootstrap5
@@ -15,6 +15,7 @@ from sqlalchemy import Integer, String, Float, ForeignKey, DateTime
 import random
 from datetime import datetime,timedelta
 
+load_dotenv()
 app = Flask(__name__)
 login_manager = LoginManager()
 app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY")
@@ -78,6 +79,7 @@ class Missions(db.Model):
     dragon_on_mission: Mapped[str] = mapped_column(String(10),default="no")
     time_started: Mapped[datetime] = mapped_column(DateTime,  nullable=True)
     time_left: Mapped[float] = mapped_column(Float,nullable=True)
+    region: Mapped[str] = mapped_column(String(50), nullable=True)
 
 class PlantState(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -85,11 +87,22 @@ class PlantState(db.Model):
     planted_at = db.Column(db.DateTime)
     harvested = db.Column(db.Boolean, default=True)
 
+class Shop(db.Model):
+    id: Mapped[int] = mapped_column(Integer,primary_key=True)
+    item: Mapped[str] = mapped_column(String(100), unique=True)
+    item_price: Mapped[int] = mapped_column(Integer)
+
+class UsersShop(db.Model):
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
+    item: Mapped[str] = mapped_column(ForeignKey('shop.item'))
+    item_price: Mapped[int] = mapped_column(ForeignKey('shop.item_price'))
+
 with app.app_context():
     db.create_all()
 
 # with app.app_context():
-#     new_item = UserInventory(user_id=1,item_type="seed",item_name="seed",quantity=3)
+#     new_item = Shop(item="egg",item_price=4000)
 #     db.session.add(new_item)
 #     db.session.commit()
 
@@ -171,6 +184,10 @@ def get_user_food_count(user_id):
     food = UserInventory.query.filter_by(user_id=user_id,item_type="food").first()
     return food.quantity if food else 0
 
+def get_user_seed_count(user_id):
+    seed = UserInventory.query.filter_by(user_id=user_id,item_type="seed").first()
+    return seed.quantity if seed else 0
+
 def get_user_toy_count(user_id):
     toy = UserInventory.query.filter_by(user_id=user_id,item_type="toy").first()
     return toy.quantity if toy else 0
@@ -194,7 +211,7 @@ def play(user_id,dragon_id):
     if toy and toy.quantity > 0:
         toy.quantity -= 1
         dragon.happiness = min(100, dragon.happiness + 20)
-        dragon.last_play = datetime.now()
+        dragon.last_played = datetime.now()
         if toy.quantity == 0:
             db.session.delete(toy)
         db.session.commit()
@@ -210,7 +227,6 @@ def plant(user_id):
         db.session.commit()
         return "yes"
     return None
-
 
 def update_dragon_hunger(dragon):
     now = datetime.now()
@@ -234,11 +250,72 @@ def update_dragon_happiness(dragon):
         db.session.commit()
     return dragon.happiness
 
+def buy_item(user_id,item_id):
+    food = UserInventory.query.filter_by(user_id=user_id, item_type='food').first()
+    toy = UserInventory.query.filter_by(user_id=user_id, item_type='toy').first()
+    egg = UserInventory.query.filter_by(user_id=user_id, item_type='Egg').first()
+    seed = UserInventory.query.filter_by(user_id=user_id, item_type='seed').first()
+    item_to_buy = db.session.execute(db.select(Shop).where(Shop.id == item_id)).scalar()
+    if item_to_buy.item == "food":
+        if food and food.quantity > 0:
+            food.quantity += 1
+        else:
+            new_food = UserInventory(user_id=user_id, item_type="food",item_name="food",quantity=1)
+            db.session.add(new_food)
+    if item_to_buy.item == "toy":
+        if toy and toy.quantity > 0:
+            toy.quantity += 1
+        else:
+            new_toy = UserInventory(user_id=user_id, item_type="toy",item_name="toy",quantity=1)
+            db.session.add(new_toy)
+    if item_to_buy.item == "egg":
+        if egg and egg.quantity > 0:
+            egg.quantity += 1
+        else:
+            new_egg = UserInventory(user_id=user_id, item_type="Egg",item_name="dragon egg",quantity=1)
+            db.session.add(new_egg)
+    if item_to_buy.item == "seed":
+        if seed and seed.quantity > 0:
+            seed.quantity += 1
+        else:
+            new_seed = UserInventory(user_id=user_id, item_type="seed",item_name="seed",quantity=1)
+            db.session.add(new_seed)
+    db.session.commit()
+
+def sell_item(user_id,item_id):
+    food = UserInventory.query.filter_by(user_id=user_id, item_type='food').first()
+    toy = UserInventory.query.filter_by(user_id=user_id, item_type='toy').first()
+    egg = UserInventory.query.filter_by(user_id=user_id, item_type='Egg').first()
+    seed = UserInventory.query.filter_by(user_id=user_id, item_type='seed').first()
+    item_to_sell = db.session.execute(db.select(Shop).where(Shop.id == item_id)).scalar()
+    if item_to_sell.item == "food":
+        if food and food.quantity > 0:
+            food.quantity -= 1
+            if food.quantity == 0:
+                db.session.delete(food)
+    if item_to_sell.item == "toy":
+        if toy and toy.quantity > 0:
+            toy.quantity -= 1
+            if toy.quantity == 0:
+                db.session.delete(toy)
+    if item_to_sell.item == "egg":
+        if egg and egg.quantity > 0:
+            egg.quantity -= 1
+            if egg.quantity == 0:
+                db.session.delete(egg)
+    if item_to_sell.item == "seed":
+        if seed and seed.quantity > 0:
+            seed.quantity -= 1
+            if seed.quantity == 0:
+                db.session.delete(seed)
+    db.session.commit()
+
 def get_reward(user_id,level):
     user = db.session.execute(db.select(UserInventory).where(UserInventory.user_id == user_id)).scalar()
     food = UserInventory.query.filter_by(user_id=user_id, item_type='food').first()
     toy = UserInventory.query.filter_by(user_id=user_id, item_type='toy').first()
     egg = UserInventory.query.filter_by(user_id=user_id, item_type='Egg').first()
+    reward = {}
     if level == "quick":
         chosen_number = random.randint(1, 2)
         add_food = chosen_number
@@ -253,13 +330,16 @@ def get_reward(user_id,level):
         else:
             new_toy = UserInventory(user_id=user_id, item_type="toy",item_name="toy",quantity=add_toy)
             db.session.add(new_toy)
+        reward["food"] = add_food
+        reward["toy"] = add_toy
     elif level == "medium":
         if random.random() < 0.2:
-            if egg and egg.quanity > 0:
-                egg.quanity += 1
+            if egg and egg.quantity > 0:
+                egg.quantity += 1
             else:
                 new_egg = UserInventory(user_id=user_id, item_type="Egg", item_name="dragon egg", quantity=1)
                 db.session.add(new_egg)
+            reward["egg"] = 1
         else:
             chosen_number = random.randint(1, 5)
             add_food = chosen_number
@@ -274,13 +354,16 @@ def get_reward(user_id,level):
             else:
                 new_toy = UserInventory(user_id=user_id, item_type="toy", item_name="toy", quantity=add_toy)
                 db.session.add(new_toy)
+            reward["food"] = add_food
+            reward["toy"] = add_toy
     elif level == "long":
         if random.random() < 0.45:
-            if egg and egg.quanity > 0:
-                egg.quanity += 1
+            if egg and egg.quantity > 0:
+                egg.quantity += 1
             else:
                 new_egg = UserInventory(user_id=user_id, item_type="Egg", item_name="dragon egg", quantity=1)
                 db.session.add(new_egg)
+            reward["egg"] = 1
         else:
             chosen_number = random.randint(1, 8)
             add_food = chosen_number
@@ -295,7 +378,10 @@ def get_reward(user_id,level):
             else:
                 new_toy = UserInventory(user_id=user_id, item_type="toy", item_name="toy", quantity=add_toy)
                 db.session.add(new_toy)
-        db.session.commit()
+            reward["food"] = add_food
+            reward["toy"] = add_toy
+    db.session.commit()
+    return reward
 
 def send_dragon(user_id,dragon_id):
     pass
@@ -303,6 +389,10 @@ def send_dragon(user_id,dragon_id):
 @login_manager.user_loader
 def load_user(user_id):
     return db.get_or_404(User, user_id)
+
+@app.route("/support")
+def support():
+    return render_template('donation.html')
 
 @app.route("/")
 def home():
@@ -378,22 +468,166 @@ def missions():
         .where(Missions.user_id == current_user.id)
         .where(Missions.dragon_on_mission == "yes")
     ).scalars().all()
-    available_dragons = db.session.execute(
+
+    users_dragons_free = (db.session.execute(
         db.select(DragonsOwned)
-        .where(DragonsOwned.user_id == current_user.id)
-        .where(DragonsOwned.id.notin_(busy_dragon_ids))
-        .join(Dragons)
+        .where(DragonsOwned.user_id == user_id)
+        .where(DragonsOwned.dragon_id.notin_(busy_dragon_ids)))).scalars().all()
+
+    dragons_names = db.session.execute(
+        db.select(Dragons)
+        .select_from(DragonsOwned)
+        .where(DragonsOwned.user_id == user_id)
+        .where(DragonsOwned.dragon_id.notin_(busy_dragon_ids)).join(Dragons)).scalars().all()
+
+    free_dragons_json = []
+    for drag in dragons_names:
+        name = {
+            'name': drag.name,
+            'id':drag.id,
+        }
+        free_dragons_json.append(name)
+
+    busy_dragons = db.session.execute(
+        db.select(Dragons)
+        .select_from(DragonsOwned)
+        .where(DragonsOwned.user_id == user_id)
+        .where(DragonsOwned.dragon_id.in_(busy_dragon_ids)).join(Dragons)).scalars().all()
+
+    print(f"busy: {busy_dragons}")
+    if request.method == "POST":
+        region = request.form.get("region")
+        dragon_sent_id = int(request.form.get("dragon_id"))
+
+        dragon_sent = db.session.execute(
+            db.select(Missions).where(Missions.dragon_id == dragon_sent_id)
+        ).scalar()
+
+        if not dragon_sent:
+            dragon_sent = Missions(
+                user_id=user_id,
+                dragon_id=dragon_sent_id,
+                dragon_on_mission="yes",
+                time_started=datetime.utcnow(),
+                region=region,
+            )
+            db.session.add(dragon_sent)
+        else:
+            dragon_sent.dragon_on_mission = "yes"
+            dragon_sent.time_started = datetime.utcnow()
+            dragon_sent.region = region
+
+        db.session.commit()
+        return redirect(url_for('missions'))
+
+    return render_template('missions.html',user_dragons=free_dragons_json,
+                           busy_dragons=busy_dragons,)
+
+@app.route("/claim_reward", methods=["POST","GET"])
+@login_required
+def claim_reward():
+    reward = None
+    dragons_back = None
+    dragons_still_busy = None
+    user_id = current_user.id
+    dragons_busy = db.session.execute(
+        db.select(Missions)
+        .where(Missions.user_id == current_user.id)
+        .where(Missions.dragon_on_mission == "yes")
     ).scalars().all()
-    user_dragons = [{"id": d.id, "name": d.dragon_obj.name} for d in available_dragons]
+    print(f"dragons on mission: {dragons_busy}")
+    reward = []
+    dragons_back = []
+    dragons_still_busy = []
+    for mission in dragons_busy:
+        if mission.region == "farm" or mission.region == "mushroom-forest":
+            now = datetime.utcnow()
+            time_elapsed = (now - mission.time_started).total_seconds()
+            if time_elapsed < 10:
+                pass
+            else:
+                mission.dragon_on_mission = "no"
+                dragon_back = db.session.execute(
+                    db.select(Dragons).where(Dragons.id == mission.dragon_id)
+                ).scalar()
+                new_reward = get_reward(user_id, "quick")
+                db.session.commit()
+                dragons_back.append(dragon_back)
+                reward.append(new_reward)
+        elif mission.region == "pond" or mission.region == "sleeping-forest":
+            now = datetime.utcnow()
+            time_elapsed = (now - mission.time_started).total_seconds()
+            if time_elapsed < 20:
+                pass
+            else:
+                mission.dragon_on_mission = "no"
+                dragon_back = db.session.execute(
+                    db.select(Dragons).where(Dragons.id == mission.dragon_id)
+                ).scalar()
+                new_reward = get_reward(user_id, "medium")
+                db.session.commit()
+                dragons_back.append(dragon_back)
+                reward.append(new_reward)
+        elif mission.region == "wishing-well" or mission.region == "crystal-peaks":
+            now = datetime.utcnow()
+            time_elapsed = (now - mission.time_started).total_seconds()
+            if time_elapsed < 30:
+                pass
+            else:
+                mission.dragon_on_mission = "no"
+                dragon_back = db.session.execute(
+                    db.select(Dragons).where(Dragons.id == mission.dragon_id)
+                ).scalar()
+                new_reward = get_reward(user_id, "long")
+                db.session.commit()
+                dragons_back.append(dragon_back)
+                reward.append(new_reward)
+        elif mission.region == "open-field":
+            now = datetime.utcnow()
+            time_elapsed = (now - mission.time_started).total_seconds()
+            if time_elapsed < 20:
+                pass
+            else:
+                mission.dragon_on_mission = "no"
+                dragon_back = db.session.execute(
+                    db.select(Dragons).where(Dragons.id == mission.dragon_id)
+                ).scalar()
+                new_happy = 100
+                new_hunger = 100
+                dragon_to_update = db.session.execute(
+                    db.select(DragonsOwned).where(DragonsOwned.dragon_id == mission.dragon_id)).scalar()
+                dragon_to_update.hunger = new_hunger
+                dragon_to_update.happiness = new_happy
+                new_reward = None
+                db.session.commit()
+                dragons_back.append(dragon_back)
+                reward.append(new_reward)
+    for mission in dragons_busy:
+        now = datetime.utcnow()
+        time_elapsed = (now - mission.time_started).total_seconds()
+        required_time = 0
+        if mission.region in ["farm", "mushroom-forest"]:
+            required_time = 10
+        elif mission.region in ["pond", "sleeping-forest","open-field"]:
+            required_time = 20
+        elif mission.region in ["wishing-well", "crystal-peaks"]:
+            required_time = 30
 
-    region = request.form.get("region")
-    print(region)
-    dragon_sent_id = request.form.get("dragon_id")
-    print(dragon_sent_id)
-    if region == "farm" or region == "mushroom-forest":
-        pass
+        time_left = max(0, int(required_time - time_elapsed))
 
-    return render_template('missions.html',user_dragons=user_dragons)
+        if time_left > 0:
+            dragon = db.session.execute(
+                db.select(Dragons).where(Dragons.id == mission.dragon_id)
+            ).scalar()
+            dragons_still_busy.append({
+                "name": dragon.name,
+                "time_left": time_left,
+            })
+    print(dragons_back)
+    print(dragons_still_busy)
+    return render_template('claim-reward.html',rewards=reward,dragon_back=dragons_back,
+                           dragons_busy=dragons_still_busy)
+
 
 @app.route("/mydragons")
 @login_required
@@ -412,7 +646,15 @@ def user_dragons():
 @app.route("/inventory")
 @login_required
 def inventory():
-    return render_template('inventory.html')
+    user_id = current_user.id
+    users_food_count = get_user_food_count(user_id)
+    users_toy_count = get_user_toy_count(user_id)
+    users_seed_count = get_user_seed_count(user_id)
+    users_egg_count = get_user_egg_count(user_id)
+    user = db.session.execute(db.select(User).where(User.id == user_id)).scalar()
+    coins = user.coins
+    return render_template('inventory.html', eggs=users_egg_count,food=users_food_count,
+                           toy=users_toy_count,seed=users_seed_count,coins=coins)
 
 @app.route("/inventory/eggs",methods =["GET","POST"])
 @login_required
@@ -439,13 +681,15 @@ def care_for():
         action = request.form.get("action")
         which_dragon = request.form.get("dragon")
         caring_for = db.session.execute(db.select(Dragons).where(Dragons.name == which_dragon)).scalar()
-        dragon_owned = db.session.execute(db.select(DragonsOwned).where(DragonsOwned.dragon_id == caring_for .id)).scalar()
+        dragon_owned = db.session.execute(db.select(DragonsOwned).where
+                                          (DragonsOwned.dragon_id == caring_for .id)).scalar()
         if action == "feed":
             food = feed(user_id=current_user.id,dragon_id= dragon_owned.dragon_id)
             if food:
                 flash(f"{caring_for .name} loved that!")
                 update_dragon_hunger(dragon_owned)
-                return render_template('care-for.html',care=dragon_owned, dragon=caring_for,show_script = True,action_done="feed")
+                return render_template('care-for.html',care=dragon_owned,
+                                       dragon=caring_for,show_script = True,action_done="feed")
             else:
                 flash("You have no food!")
         if action == "play":
@@ -453,16 +697,87 @@ def care_for():
             if toy:
                 flash(f"{caring_for .name} had so much fun!")
                 update_dragon_happiness(dragon_owned)
-                return render_template('care-for.html',care=dragon_owned, dragon=caring_for,show_script = True, action_done="play")
+                return render_template('care-for.html',care=dragon_owned,
+                                       dragon=caring_for,show_script = True, action_done="play")
             else:
                 flash("You need a toy!")
-        return render_template('care-for.html',care=dragon_owned, dragon=caring_for,show_script=True)
+        return render_template('care-for.html',care=dragon_owned,
+                               dragon=caring_for,show_script=True)
     who = request.args.get("dragon")
     dragon_info = db.session.execute(db.select(Dragons).where(Dragons.name == who)).scalar()
-    dragon_owned = db.session.execute(db.select(DragonsOwned).where(DragonsOwned.dragon_id == dragon_info.id)).scalar()
+    dragon_owned = db.session.execute(db.select(DragonsOwned).where
+                                      (DragonsOwned.dragon_id == dragon_info.id)).scalar()
     update_dragon_hunger(dragon_owned)
     update_dragon_happiness(dragon_owned)
-    return render_template('care-for.html',care=dragon_owned, dragon=dragon_info, show_script=True)
+    return render_template('care-for.html',care=dragon_owned,
+                           dragon=dragon_info, show_script=True)
+
+@app.route("/store",methods=["GET","POST"])
+@login_required
+def store():
+    user_id = current_user.id
+    user = db.session.execute(db.select(User).where(User.id == user_id)).scalar()
+    user_coins = user.coins
+    items = db.session.execute(db.select(Shop)).scalars().all()
+    users_food_count = get_user_food_count(user_id)
+    users_toy_count = get_user_toy_count(user_id)
+    users_seed_count = get_user_seed_count(user_id)
+    users_egg_count = get_user_egg_count(user_id)
+    if request.method == "POST":
+        item_id = int(request.form.get("item_id"))
+        action = request.form.get("action")
+        item = db.session.execute(db.select(Shop).where(Shop.id == item_id)).scalar()
+        print(f"item: {item}")
+        if action == "buy":
+            if user_coins > item.item_price:
+                user_coins -= item.item_price
+                user_coins_update = db.session.execute(db.select(User).where(User.id == user_id)).scalar()
+                user_coins_update.coins = user_coins
+                db.session.commit()
+                buy_item(user_id, item_id)
+            else:
+                flash("You don't have enough coins!")
+        if action == "sell":
+            if item.item == "food":
+                if users_food_count > 0:
+                    sell_item(user_id, item_id)
+                    user_coins_update = db.session.execute(db.select(User).where(User.id == user_id)).scalar()
+                    user_coins_update.coins = user_coins
+                    db.session.commit()
+                    user_coins += item.item_price
+                else:
+                    flash("You don't have any food!")
+            elif item.item == "toy":
+                if users_toy_count > 0:
+                    sell_item(user_id, item_id)
+                    user_coins += item.item_price
+                    user_coins_update = db.session.execute(db.select(User).where(User.id == user_id)).scalar()
+                    user_coins_update.coins = user_coins
+                    db.session.commit()
+                else:
+                    flash("You don't have any toys!")
+            elif item.item == "seed":
+                if users_seed_count > 0:
+                    sell_item(user_id, item_id)
+                    user_coins += item.item_price
+                    user_coins_update = db.session.execute(db.select(User).where(User.id == user_id)).scalar()
+                    user_coins_update.coins = user_coins
+                    db.session.commit()
+                else:
+                    flash("You don't have any seeds!")
+            elif item.item == "egg":
+                if users_egg_count > 0:
+                    sell_item(user_id, item_id)
+                    user_coins += item.item_price
+                    user_coins_update = db.session.execute(db.select(User).where(User.id == user_id)).scalar()
+                    user_coins_update.coins = user_coins
+                    db.session.commit()
+                else:
+                    flash("You don't have any eggs!")
+        db.session.commit()
+        return redirect(url_for('store'))
+    return render_template('store.html',items=items,user_coins=user_coins)
+
 
 @app.route("/farm",methods=["GET","POST"])
 @login_required

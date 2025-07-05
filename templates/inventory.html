@@ -13,27 +13,36 @@
     <span class="tooltip-text">Hatchery</span>
       <img src="{{ url_for('static', filename='images/egg2.png')}}" width="100" >
   </a> </li>
-      <li>
-  <a href="#" class="styled-tooltip nav-link py-3 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dashboard" data-bs-original-title="Dashboard">
-    <span class="tooltip-text">Food</span>
-      <img src="{{ url_for('static', filename='images/food.png')}}" width="100" >
-  </a> </li>
-      <li>
-  <a href="#" class="styled-tooltip nav-link py-3 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Orders" data-bs-original-title="Orders">
-    <span class="tooltip-text">Toys</span>
-      <img src="{{ url_for('static', filename='images/toy.png')}}" width="100" >
-  </a>
-</li>
   </ul>
 </div>
     </div>
     <div class="col-md-11">
       <div class="welcome-banner">
   <h1 class="fantasy-welcome">Inventory</h1>
+   <div class="row justify-content-center fantasy-subtext">
+    <div class="col-6 col-md-3">🥚 Eggs: {{ eggs }}</div>
+    <div class="col-6 col-md-3">🍎 Food: {{ food }}</div>
+    <div class="col-6 col-md-3">🧸 Toys: {{ toy }}</div>
+    <div class="col-6 col-md-3">🌱 Seeds: {{ seed }}</div>
+    <div class="col-12 mt-2">💰 Coins: {{ coins }}</div>
+  </div>
+</div>
 </div>
 <div class="px-4 pt-0 mt-4 text-center">
-    <div class="overflow-hidden">
-            <img src="{{ url_for('static', filename='images/inventory.png')}}" width=800 class="img-fluid  rounded-3 mb-1" alt="Map of Nestoria" loading="lazy" >
+    <div class="img-container">
+        <img src="{{ url_for('static', filename='images/inventory.png')}}" width=800 class="parent-img img-fluid  rounded-3 mb-1" alt="Inventory" loading="lazy" >
+        {% if eggs> 0 %}
+        <img src="{{ url_for('static', filename='images/egg2.png') }}" alt="Dragon Egg" class="inventory-egg">
+        {% endif %}
+        {% if toy> 0 %}
+        <img src="{{ url_for('static', filename='images/toy.png') }}" alt="Toy" class="inventory-toy">
+        {% endif %}
+        {% if food> 0 %}
+        <img src="{{ url_for('static', filename='images/food.png') }}" alt="Food" class="inventory-food">
+        {% endif %}
+        {% if seed> 0 %}
+        <img src="{{ url_for('static', filename='images/seeds.png') }}" alt="Seeds" class="inventory-seed">
+        {% endif %}
     </div>
     </div>
   </div>

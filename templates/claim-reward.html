@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Rewards{% endblock %}
+{% include 'logged-in-header.html' %}
+{% block content %}
+<div class="welcome-banner">
+    <h1 class="fantasy-welcome">Tiny Wings, Big Treasure!</h1>
+     <p class="fantasy-subtext">What did your dragons find? </p>
+</div>
+<div class="px-4 pt-0 mt-4 text-center">
+    <div class="overflow-hidden">
+            <img src="{{ url_for('static', filename='images/rewards2.png')}}" width=800 class="img-fluid  rounded-3 mb-1" alt="Map of Nestoria" loading="lazy" >
+    </div>
+    </div>
+<div class="welcome-banner">
+<div class="px-4 pt-0 mt-0 text-center">
+  {% if dragon_back %}
+  {% for dragon in dragon_back %}
+    <p>{{ dragon.name }} has returned</p>
+  {% endfor %}
+    {% endif %}
+  {% if rewards %}
+    <p>Rewards:</p>
+    {% for reward in rewards %}
+    {% if reward["toy"] %}
+    <p>Toy: {{reward['toy']}}</p>
+    {% endif %}
+    {% if reward["food"] %}
+    <p>Food: {{reward['food']}}</p>
+    {% endif %}
+    {% if reward["egg"] %}
+    <p>Egg: {{reward['egg']}}</p>
+    {% endif %}
+    {% endfor %}
+    {%endif%}
+</div>
+<div class="px-4 pt-0 mt-0 text-center">
+  {% if dragons_busy %}
+    {% for dragon in dragons_busy %}
+      <p>
+        {{ dragon.name }} is on an adventure!<br>
+        <span id="timer-{{ loop.index0 }}">Time left: <span class="time-left">{{ dragon.time_left }}</span> seconds</span>
+      </p>
+    {% endfor %}
+  {% endif %}
+</div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const timers = document.querySelectorAll(".time-left");
+
+    timers.forEach((el) => {
+      let time = parseInt(el.textContent);
+
+      const interval = setInterval(() => {
+        time -= 1;
+        if (time <= 0) {
+          el.textContent = "Done!";
+          clearInterval(interval);
+        } else {
+          el.textContent = time + " seconds";
+        }
+      }, 1000);
+    });
+  });
+</script>
+{% include 'footer.html' %}
+{% endblock %}

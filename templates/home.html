@@ -23,5 +23,30 @@
         </a>
     </div>
 </main>
-{% endblock %}
+{% extends 'base.html' %}
+{% block title %}TinyWings{% endblock %}
+{% include 'header.html' %}
+{% block content %}
+<main class=" px-3">
+    <div class="welcome-banner">
+    <h1 class="fantasy-welcome">Who will you hatch?</h1>
+     <p class="fantasy-subtext">A Whisper in the Egg... A Winged Dream Awaits! </p>
+    </div>
+    <div class="d-flex justify-content-center align-items-center mt-4">
+        <video src="{{ url_for('static', filename='videos/hatching.mp4') }}"
+       loop
+       onmouseover="this.play()"
+       onmouseout="this.pause(); this.currentTime = 0"
+       style="width: 800px; height: auto;"
+        class="rounded">
+    Your browser does not support the video tag.
+</video>
+    </div>
+    <div class="d-flex justify-content-center align-items-center mt-4">
+        <a href="{{ url_for('register') }}">
+            <button type="button" class="meie-script-regular btn btn-light">Join the adventure 𖹭</button>
+        </a>
+    </div>
+</main>
 {% include 'footer.html' %}
+{% endblock %}

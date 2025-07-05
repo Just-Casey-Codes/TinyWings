@@ -7,7 +7,7 @@ Bootstrap-Flask==2.2.0
 WTForms==3.0.1
 Werkzeug==2.3.7
 python-dotenv==1.0.1
-SQLAlchemy==1.4.49
+SQLAlchemy==2.0.0
 Alembic==1.11.1
 gunicorn==21.2.0
 psycopg2-binary==2.9.9

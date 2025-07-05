@@ -678,23 +678,24 @@ def care_for():
         which_dragon = request.form.get("dragon")
         caring_for = db.session.execute(db.select(Dragons).where(Dragons.name == which_dragon)).scalar()
         dragon_owned = db.session.execute(db.select(DragonsOwned).where
-                                          (DragonsOwned.dragon_id == caring_for .id)).scalar()
+                                          (DragonsOwned.dragon_id == caring_for.id)).scalar()
+        lower_drag_name = caring_for.name.lower()
         if action == "feed":
             food = feed(user_id=current_user.id,dragon_id= dragon_owned.dragon_id)
             if food:
-                flash(f"{caring_for .name} loved that!")
+                flash(f"{caring_for.name} loved that!")
                 update_dragon_hunger(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,
-                                       dragon=caring_for,show_script = True,action_done="feed")
+                                       dragon=caring_for,show_script = True,action_done="feed",name=lower_drag_name)
             else:
                 flash("You have no food!")
         if action == "play":
             toy = play(user_id=current_user.id,dragon_id= dragon_owned.dragon_id)
             if toy:
-                flash(f"{caring_for .name} had so much fun!")
+                flash(f"{caring_for.name} had so much fun!")
                 update_dragon_happiness(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,
-                                       dragon=caring_for,show_script = True, action_done="play")
+                                       dragon=caring_for,show_script = True, action_done="play",name=lower_drag_name)
             else:
                 flash("You need a toy!")
         return render_template('care-for.html',care=dragon_owned,
@@ -706,7 +707,7 @@ def care_for():
     update_dragon_hunger(dragon_owned)
     update_dragon_happiness(dragon_owned)
     return render_template('care-for.html',care=dragon_owned,
-                           dragon=dragon_info, show_script=True)
+                           dragon=dragon_info, show_script=True,name=who)
 
 @app.route("/store",methods=["GET","POST"])
 @login_required

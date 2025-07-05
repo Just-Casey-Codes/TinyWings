@@ -48,9 +48,9 @@
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const dragonVideo = document.getElementById("dragon-video");
-    const baseVideo = "{{ url_for('static', filename='videos/' + dragon.name|lower + '.mp4') }}";
-    const feedVideo = "{{ url_for('static', filename='care/' + dragon.name|lower + '_eat.mp4') }}";
-    const playVideo = "{{ url_for('static', filename='care/' + dragon.name|lower + '_play.mp4') }}";
+    const baseVideo = "{{ url_for('static', filename='videos/' + name + '.mp4') }}";
+    const feedVideo = "{{ url_for('static', filename='care/' + name + '_eat.mp4') }}";
+    const playVideo = "{{ url_for('static', filename='care/' + name + '_play.mp4') }}";
     const videoSource = dragonVideo.querySelector("source")
 
     function playTempVideo(tempUrl) {

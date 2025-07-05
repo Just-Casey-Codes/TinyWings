@@ -7,3 +7,5 @@ gunicorn
 psycopg2-binary
 python-dotenv
 Flask-Login
+Flask-Migrate==4.0.5
+SQLAlchemy==2.0.29

@@ -279,7 +279,7 @@ main.flex-fill {
 }
 .img-container {
   position: relative;
-  width: 100%;
+  width: 800;
   max-width: 1000px;
   margin: 0 auto;
 }

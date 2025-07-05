@@ -94,12 +94,6 @@ class Shop(db.Model):
     item: Mapped[str] = mapped_column(String(100), unique=True)
     item_price: Mapped[int] = mapped_column(Integer)
 
-class UsersShop(db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
-    item: Mapped[str] = mapped_column(ForeignKey('shop.item'))
-    item_price: Mapped[int] = mapped_column(ForeignKey('shop.item_price'))
-
 with app.app_context():
     db.create_all()
 

@@ -443,7 +443,7 @@ main.flex-fill {
   opacity: 1;
 }
 
-..stat-bar {
+.stat-bar {
   margin-bottom: 1rem;
   font-weight: bold;
   width: 300px;
@@ -477,4 +477,7 @@ main.flex-fill {
 .store-bg {
   background: url('/static/images/parchment-bg.png') no-repeat center;
   background-size: cover;
+}
+.main-content {
+  margin-left: 4.5rem;
 }

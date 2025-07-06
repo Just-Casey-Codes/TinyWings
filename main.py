@@ -495,7 +495,10 @@ def missions():
         dragon_sent_id = int(request.form.get("dragon_id"))
 
         dragon_sent = db.session.execute(
-            db.select(Missions).where(Missions.dragon_id == dragon_sent_id)
+            db.select(Missions).where(
+                Missions.user_id == user_id,
+                Missions.dragon_id == dragon_sent_id
+            )
         ).scalar()
 
         if not dragon_sent:

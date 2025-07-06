@@ -102,14 +102,6 @@ with app.app_context():
 #     db.session.commit()
 
 with app.app_context():
-    dragons = DragonsOwned.query.filter(DragonsOwned.last_fed == '').all()
-    for dragon in dragons:
-        dragon.last_fed = None
-    dragons = DragonsOwned.query.filter(DragonsOwned.last_played == '').all()
-    for dragon in dragons:
-        dragon.last_played = None
-    db.session.commit()
-
     dragons = DragonsOwned.query.filter(
         (DragonsOwned.last_fed == None) | (DragonsOwned.last_played == None)).all()
     for dragon in dragons:

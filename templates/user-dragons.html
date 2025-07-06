@@ -15,7 +15,7 @@
             {% if dragons %}
             {% for dragon in dragons %}
                 <a href="{{url_for('care_for', dragon=dragon|lower)}}" class="{{ dragon|lower }}">
-                <img src="{{ url_for('static', filename='dragons/' ~ dragon|lower ~ '.png')}}" width=200 class=" img-fluid  rounded-3 mb-1" alt="{{dragon}}" loading="lazy" >
+                <img src="{{ url_for('static', filename='dragons/' ~ dragon|lower ~ '.webp')}}" width=200 class=" img-fluid  rounded-3 mb-1" alt="{{dragon}}" loading="lazy" >
                 </a>
             {% endfor %}
             {% endif %}

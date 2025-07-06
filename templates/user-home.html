@@ -6,8 +6,8 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="col-md-1">
   <div class="row">
+      <div class="col-md-1">
     <div class="d-flex flex-column flex-shrink-0 bg-body-tertiary" style="width: 4.5rem;">
         <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
  <li>
@@ -26,6 +26,7 @@
         </ul>
 </div>
     </div>
+      </div>
       <div class="col-md-11">
 <div class="welcome-banner">
   <h1 class="fantasy-welcome">Welcome home, {{ current_user.username }}! 𖹭</h1>
@@ -36,5 +37,4 @@
 </div>
 </div>
         </div>
-  </div>
 {% endblock %}

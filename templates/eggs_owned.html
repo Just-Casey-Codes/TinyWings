@@ -12,7 +12,7 @@
                 <img src="{{ url_for('static', filename=dragon.img) }}" width="200" alt="{{ dragon.name }}">
             {% endif %}
         </div>
-<div class="px-4 pt-0 mt-4 text-center">
+<div class="col-md-11 main-content text-center">
     <div class="img-container">
         <img src="{{ url_for('static', filename='images/nest.webp')}}" width=800 class="parent-img img-fluid  rounded-3 mb-1" alt="Dragon Nest" loading="lazy" >
         {% if eggs> 0 %}

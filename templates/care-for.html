@@ -5,6 +5,19 @@
 
 {% block content %}
 <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-1">
+<div class="d-flex flex-column flex-shrink-0 bg-body-tertiary" style="width: 4.5rem;">
+  <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+ <li>
+  <a href="{{url_for('inventory_eggs')}}" class="styled-tooltip nav-link py-3 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dashboard" data-bs-original-title="Dashboard">
+    <span class="tooltip-text">Hatchery</span>
+      <img src="{{ url_for('static', filename='images/egg2.webp')}}" width="100" >
+  </a> </li>
+  </ul>
+</div>
+    </div>
+    <div class="col-md-11 main-content">
 <div class="welcome-banner">
   <h1 class="fantasy-welcome">{{dragon.name}} 💗</h1>
 </div>
@@ -42,8 +55,14 @@
   <button type="submit" class="btn btn-primary" id="play-button">Play</button>
 </form>
 </div>
+  <div class="d-flex justify-content-center align-items-center mt-4">
+        <a href="{{ url_for('user_dragons') }}">
+            <button type="button" class="meie-script-regular btn btn-light">Back</button>
+        </a>
+    </div>
 </div>
 </div>
+  </div>
 {% if show_script %}
 <script>
   document.addEventListener("DOMContentLoaded", function () {

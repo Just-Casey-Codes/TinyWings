@@ -30,7 +30,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
 
-  background-image: url("../images/clouds.png");
+  background-image: url("../images/clouds.webp");
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -115,7 +115,7 @@ main.flex-fill {
   outline: #FF9898;
   background-size: 100%, 100%;
   border-radius: 50%;
-  background-image: url("../images/arrow-right.png") !important;
+  background-image: url("../images/arrow-right.webp") !important;
 }
 .carousel-control-prev-icon {
   height: 100px;
@@ -123,7 +123,7 @@ main.flex-fill {
   outline: #FF9898;
   background-size: 100%, 100%;
   border-radius: 50%;
-  background-image: url("../images/arrow-left.png") !important;
+  background-image: url("../images/arrow-left.webp") !important;
 }
 .front video {
     width: 100%;
@@ -245,7 +245,7 @@ main.flex-fill {
 .hover-info {
   display: none;
   position: absolute;
-  background: url('/static/images/parchment-bg.png') no-repeat center center;
+  background: url('/static/images/parchment-bg.webp') no-repeat center center;
   background-size: cover;
   padding: 20px;
   font-family: 'Sevillana', cursive;
@@ -475,7 +475,7 @@ main.flex-fill {
   margin: 1rem 0;
 }
 .store-bg {
-  background: url('/static/images/parchment-bg.png') no-repeat center;
+  background: url('/static/images/parchment-bg.webp') no-repeat center;
   background-size: cover;
 }
 .main-content {

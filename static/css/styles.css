@@ -34,6 +34,11 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
 }
+@media (max-width: 768px) {
+  header, footer {
+    width: 100vw;
+  }
+}
 .page-wrapper {
   flex: 1 1 auto;
   display: flex;

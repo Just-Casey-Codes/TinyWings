@@ -603,11 +603,11 @@ def claim_reward():
         time_elapsed = (now - mission.time_started).total_seconds()
         required_time = 0
         if mission.region in ["farm", "mushroom-forest"]:
-            required_time = 1080
-        elif mission.region in ["pond", "sleeping-forest","open-field"]:
             required_time = 2000
-        elif mission.region in ["wishing-well", "crystal-peaks"]:
+        elif mission.region in ["pond", "sleeping-forest","open-field"]:
             required_time = 3600
+        elif mission.region in ["wishing-well", "crystal-peaks"]:
+            required_time = 7200
 
         time_left = max(0, int(required_time - time_elapsed))
 

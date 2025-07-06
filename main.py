@@ -27,7 +27,7 @@ login_manager.init_app(app)
 class Base(DeclarativeBase):
     pass
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_UR")
 db= SQLAlchemy(model_class=Base)
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -103,6 +103,14 @@ with app.app_context():
 #     db.session.commit()
 
 with app.app_context():
+    dragons = DragonsOwned.query.filter(DragonsOwned.last_fed == '').all()
+    for dragon in dragons:
+        dragon.last_fed = None
+    dragons = DragonsOwned.query.filter(DragonsOwned.last_played == '').all()
+    for dragon in dragons:
+        dragon.last_played = None
+    db.session.commit()
+
     dragons = DragonsOwned.query.filter(
         (DragonsOwned.last_fed == None) | (DragonsOwned.last_played == None)).all()
     for dragon in dragons:
@@ -826,4 +834,4 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)

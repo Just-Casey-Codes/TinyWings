@@ -2,7 +2,7 @@
 {% block title %}TinyWings{% endblock %}
 {% include 'logged-in-header.html' %}
 {% block content %}
-<main class=" px-3">
+<div class="container-fluid">
     <div class="welcome-banner">
     <h1 class="fantasy-welcome">{{current_user.username}}'s Farm</h1>
      <p class="fantasy-subtext">Where dragon snacks begin </p>
@@ -42,7 +42,7 @@
                 <img src="{{ url_for('static', filename='images/crop.webp')}}" width=200 class="plant4 img-fluid  rounded-3 mb-1" alt="crop" loading="lazy" >
             {% endif %}
     </div>
-</main>
+</div>
 {% if timer %}
 {% if timer and not button_text %}
 <script>

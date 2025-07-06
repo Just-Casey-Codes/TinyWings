@@ -481,3 +481,6 @@ main.flex-fill {
 .main-content {
   margin-left: 4.5rem;
 }
+.header, .footer {
+  width: 100%;
+}

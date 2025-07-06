@@ -2,6 +2,7 @@
 {% block title %}Missions{% endblock %}
 {% include 'logged-in-header.html' %}
 {% block content %}
+<div class="container-fluid">
 <map name="image-map">
     <area data-region="farm" alt="farm" title="farm" href="#" coords="170,842,24" shape="circle">
     <area data-region="pond" alt="pond" title="pond" href="#" coords="857,927,24" shape="circle">
@@ -42,6 +43,7 @@
     <a href="{{url_for('claim_reward')}}">
         <button class="btn btn-success">Claim reward!</button>
     </a>
+</div>
 </div>
 
 <script>

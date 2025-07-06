@@ -4,7 +4,7 @@
 {% include 'logged-in-header.html' %}
 
 {% block content %}
-
+<div class="container-fluid">
 <div class="welcome-banner">
   <h1 class="fantasy-welcome">{{dragon.name}} 𖹭</h1>
 </div>
@@ -43,7 +43,7 @@
 </form>
 </div>
 </div>
-
+</div>
 {% if show_script %}
 <script>
   document.addEventListener("DOMContentLoaded", function () {

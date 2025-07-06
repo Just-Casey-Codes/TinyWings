@@ -4,12 +4,13 @@
 {% include 'logged-in-header.html' %}
 
 {% block content %}
-<div class="col-md-11">
+<div class="container-fluid">
+  <div class="col-md-11 main-content mx-auto">
+      <div class="d-flex flex-column align-items-center text-center">
 <div class="welcome-banner">
   <h1 class="fantasy-welcome">{{ current_user.username }}'s Dragons!</h1>
   <p class="fantasy-subtext">Click on a dragon to look after them </p>
 </div>
-<div class="px-4 pt-0 mt-4 text-center">
     <div class="img-container">
             <img src="{{ url_for('static', filename='images/dragon_area.webp')}}"  class="parent-img img-fluid  rounded-3 mb-1" alt="Map of Nestoria" loading="lazy" >
             {% if dragons %}
@@ -22,6 +23,8 @@
     </div>
 </div>
 </div>
+  </div>
+
 
 
 

@@ -26,7 +26,7 @@ login_manager.init_app(app)
 class Base(DeclarativeBase):
     pass
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_UR")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 db= SQLAlchemy(model_class=Base)
 db.init_app(app)
 migrate = Migrate(app, db)

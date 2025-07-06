@@ -12,11 +12,13 @@
   <p class="fantasy-subtext">Click on a dragon to look after them </p>
 </div>
     <div class="img-container">
-            <img src="{{ url_for('static', filename='images/dragon_area.webp')}}"  class="parent-img img-fluid  rounded-3 mb-1" alt="Map of Nestoria" loading="lazy" >
+            <img src="{{ url_for('static', filename='images/dragon_area.webp')}}"
+                 class="parent-img img-fluid  rounded-3 mb-1" alt="Map of Nestoria" loading="lazy" >
             {% if dragons %}
             {% for dragon in dragons %}
-                <a href="{{url_for('care_for', dragon=dragon|lower)}}" class="{{ dragon|lower }}">
-                <img src="{{ url_for('static', filename='dragons/' ~ dragon|lower ~ '.webp')}}" width=200 class=" img-fluid  rounded-3 mb-1" alt="{{dragon}}" loading="lazy" >
+                <a href="{{url_for('care_for', dragon=dragon)}}" class="{{ dragon|lower }}">
+                <img src="{{ url_for('static', filename='dragons/' ~ dragon|lower ~ '.webp')}}" width=200
+                     class=" img-fluid  rounded-3 mb-1" alt="{{dragon}}" loading="lazy" >
                 </a>
             {% endfor %}
             {% endif %}

@@ -315,13 +315,13 @@ def get_reward(user_id,level):
     if level == "quick":
         chosen_number = random.randint(1, 2)
         add_food = chosen_number
-        if food and food.quantity > 0:
+        if food:
             food.quantity += add_food
         else:
             new_food = UserInventory(user_id=user_id, item_type="food",item_name="food",quantity=add_food)
             db.session.add(new_food)
         add_toy = 2 - chosen_number
-        if toy and toy.quantity > 0:
+        if toy:
             toy.quantity += add_toy
         else:
             new_toy = UserInventory(user_id=user_id, item_type="toy",item_name="toy",quantity=add_toy)
@@ -330,7 +330,7 @@ def get_reward(user_id,level):
         reward["toy"] = add_toy
     elif level == "medium":
         if random.random() < 0.2:
-            if egg and egg.quantity > 0:
+            if egg:
                 egg.quantity += 1
             else:
                 new_egg = UserInventory(user_id=user_id, item_type="Egg", item_name="dragon egg", quantity=1)
@@ -345,7 +345,7 @@ def get_reward(user_id,level):
                 new_food = UserInventory(user_id=user_id, item_type="food", item_name="food", quantity=add_food)
                 db.session.add(new_food)
             add_toy = 5 - chosen_number
-            if toy and toy.quantity > 0:
+            if toy:
                 toy.quantity += add_toy
             else:
                 new_toy = UserInventory(user_id=user_id, item_type="toy", item_name="toy", quantity=add_toy)
@@ -363,13 +363,13 @@ def get_reward(user_id,level):
         else:
             chosen_number = random.randint(1, 8)
             add_food = chosen_number
-            if food and food.quantity > 0:
+            if food:
                 food.quantity += add_food
             else:
                 new_food = UserInventory(user_id=user_id, item_type="food", item_name="food", quantity=add_food)
                 db.session.add(new_food)
             add_toy = 8 - chosen_number
-            if toy and toy.quantity > 0:
+            if toy:
                 toy.quantity += add_toy
             else:
                 new_toy = UserInventory(user_id=user_id, item_type="toy", item_name="toy", quantity=add_toy)

@@ -13,7 +13,7 @@
 </div>
     <div class="img-container">
             <img src="{{ url_for('static', filename='images/dragon_area.webp')}}"
-                 class="parent-img img-fluid  rounded-3 mb-1" alt="Map of Nestoria" loading="lazy" >
+                 class="parent-img img-fluid  rounded-3 mb-1" alt="Dragons area" loading="lazy" >
             {% if dragons %}
             {% for dragon in dragons %}
                 <a href="{{url_for('care_for', dragon=dragon)}}" class="{{ dragon|lower }}">

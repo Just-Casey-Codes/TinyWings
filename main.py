@@ -1,5 +1,4 @@
 from email.policy import default
-
 import gunicorn
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
 from dotenv import load_dotenv
@@ -13,7 +12,7 @@ from wtforms import StringField, SubmitField, SelectField, PasswordField
 from wtforms.validators import DataRequired, URL, Email, ValidationError
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, Float, ForeignKey, DateTime
+from sqlalchemy import Integer, String, Float, ForeignKey, DateTime, func
 import random
 from datetime import datetime,timedelta
 
@@ -701,7 +700,9 @@ def care_for():
         return render_template('care-for.html',care=dragon_owned,
                                dragon=caring_for,show_script=True)
     who = request.args.get("dragon")
-    dragon_info = db.session.execute(db.select(Dragons).where(Dragons.name == who)).scalar()
+    dragon_info = db.session.execute(
+        db.select(Dragons).where(func.lower(Dragons.name) == who.lower())
+    ).scalar()
     dragon_owned = db.session.execute(db.select(DragonsOwned).where
                                       (DragonsOwned.dragon_id == dragon_info.id)).scalar()
     update_dragon_hunger(dragon_owned)

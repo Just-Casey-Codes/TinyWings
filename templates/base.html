@@ -2,35 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
     {% block styles %}
         {{ bootstrap.load_css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Sevillana&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Sevillana&display=swap" rel="stylesheet">
     {% endblock %}
 
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body class=" d-flex flex-column min-vh-100 {% block body_class %}{% endblock %}">
-    <div class="page-wrapper">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <div class="container mt-3">
-            {% for message in messages %}
-              <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% endwith %}
+<body class="d-flex flex-column min-vh-100">
 
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="container mt-3">
+          {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
 
-    <main class="{% block main_class %}flex-fill{% endblock %}">
+    <main class="flex-fill">
         {% block content %}{% endblock %}
     </main>
 
@@ -39,6 +36,5 @@
     {% block scripts %}
         {{ bootstrap.load_js() }}
     {% endblock %}
-    </div>
 </body>
 </html>

@@ -47,22 +47,35 @@
 </div>
 </div>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const timers = document.querySelectorAll(".time-left");
+document.addEventListener("DOMContentLoaded", function () {
+  const timers = document.querySelectorAll(".time-left");
 
-    timers.forEach((el) => {
-      let time = parseInt(el.textContent);
+  timers.forEach((el) => {
+    let time = parseInt(el.textContent); // total seconds
 
-      const interval = setInterval(() => {
-        time -= 1;
-        if (time <= 0) {
-          el.textContent = "Done!";
-          clearInterval(interval);
-        } else {
-          el.textContent = time + " seconds";
-        }
-      }, 1000);
-    });
+    const formatTime = (seconds) => {
+      const hrs = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      return (
+        (hrs > 0 ? hrs + "h " : "") +
+        (mins > 0 ? mins + "m " : "") +
+        secs + "s"
+      );
+    };
+
+    el.textContent = formatTime(time);
+
+    const interval = setInterval(() => {
+      time -= 1;
+      if (time <= 0) {
+        el.textContent = "Done!";
+        clearInterval(interval);
+      } else {
+        el.textContent = formatTime(time);
+      }
+    }, 1000);
   });
+});
 </script>
 {% endblock %}

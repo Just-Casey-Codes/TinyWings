@@ -59,6 +59,19 @@
   const timeDisplay = document.getElementById("time");
   const countdownDiv = document.getElementById("countdown");
 
+  const formatTime = (seconds) => {
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  return (
+    (hrs > 0 ? hrs + "h " : "") +
+    (mins > 0 ? mins + "m " : "") +
+    secs + "s"
+  );
+};
+if (timeDisplay) timeDisplay.textContent = formatTime(timeLeft);
+
   const interval = setInterval(() => {
     timeLeft -= 1;
     if (timeLeft <= 0) {
@@ -70,7 +83,7 @@
         window.location.reload();
       }, 1000);
     } else {
-      if (timeDisplay) timeDisplay.textContent = timeLeft;
+      if (timeDisplay) timeDisplay.textContent = formatTime(timeLeft);
     }
   }, 1000);
 </script>

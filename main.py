@@ -539,9 +539,7 @@ def claim_reward():
         if mission.region == "farm" or mission.region == "mushroom-forest":
             now = datetime.utcnow()
             time_elapsed = (now - mission.time_started).total_seconds()
-            if time_elapsed < 1200:
-                pass
-            else:
+            if time_elapsed > 2000:
                 mission.dragon_on_mission = "no"
                 dragon_back = db.session.execute(
                     db.select(Dragons).where(Dragons.id == mission.dragon_id)
@@ -553,9 +551,7 @@ def claim_reward():
         elif mission.region == "pond" or mission.region == "sleeping-forest":
             now = datetime.utcnow()
             time_elapsed = (now - mission.time_started).total_seconds()
-            if time_elapsed < 3600:
-                pass
-            else:
+            if time_elapsed > 3600:
                 mission.dragon_on_mission = "no"
                 dragon_back = db.session.execute(
                     db.select(Dragons).where(Dragons.id == mission.dragon_id)
@@ -567,9 +563,7 @@ def claim_reward():
         elif mission.region == "wishing-well" or mission.region == "crystal-peaks":
             now = datetime.utcnow()
             time_elapsed = (now - mission.time_started).total_seconds()
-            if time_elapsed < 30:
-                pass
-            else:
+            if time_elapsed > 7200:
                 mission.dragon_on_mission = "no"
                 dragon_back = db.session.execute(
                     db.select(Dragons).where(Dragons.id == mission.dragon_id)
@@ -581,9 +575,7 @@ def claim_reward():
         elif mission.region == "open-field":
             now = datetime.utcnow()
             time_elapsed = (now - mission.time_started).total_seconds()
-            if time_elapsed < 1080:
-                pass
-            else:
+            if time_elapsed > 3600:
                 mission.dragon_on_mission = "no"
                 dragon_back = db.session.execute(
                     db.select(Dragons).where(Dragons.id == mission.dragon_id)

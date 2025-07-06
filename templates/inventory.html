@@ -11,7 +11,7 @@
  <li>
   <a href="{{url_for('inventory_eggs')}}" class="styled-tooltip nav-link py-3 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dashboard" data-bs-original-title="Dashboard">
     <span class="tooltip-text">Hatchery</span>
-      <img src="{{ url_for('static', filename='images/egg2.png')}}" width="100" >
+      <img src="{{ url_for('static', filename='images/egg2.webp')}}" width="100" >
   </a> </li>
   </ul>
 </div>
@@ -32,16 +32,16 @@
     <div class="img-container">
         <img src="{{ url_for('static', filename='images/inventory.webp')}}" width=800 class="parent-img img-fluid  rounded-3 mb-1" alt="Inventory" loading="lazy" >
         {% if eggs> 0 %}
-        <img src="{{ url_for('static', filename='images/egg2.png') }}" alt="Dragon Egg" class="inventory-egg">
+        <img src="{{ url_for('static', filename='images/egg2.webp') }}" alt="Dragon Egg" class="inventory-egg">
         {% endif %}
         {% if toy> 0 %}
-        <img src="{{ url_for('static', filename='images/toy.png') }}" alt="Toy" class="inventory-toy">
+        <img src="{{ url_for('static', filename='images/toy.webp') }}" alt="Toy" class="inventory-toy">
         {% endif %}
         {% if food> 0 %}
-        <img src="{{ url_for('static', filename='images/food.png') }}" alt="Food" class="inventory-food">
+        <img src="{{ url_for('static', filename='images/food.webp') }}" alt="Food" class="inventory-food">
         {% endif %}
         {% if seed> 0 %}
-        <img src="{{ url_for('static', filename='images/seeds.png') }}" alt="Seeds" class="inventory-seed">
+        <img src="{{ url_for('static', filename='images/seeds.webp') }}" alt="Seeds" class="inventory-seed">
         {% endif %}
     </div>
     </div>

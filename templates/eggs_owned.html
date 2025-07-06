@@ -21,7 +21,7 @@
     <div class="img-container">
         <img src="{{ url_for('static', filename='images/nest.webp')}}" width=800 class="parent-img img-fluid  rounded-3 mb-1" alt="Dragon Nest" loading="lazy" >
         {% if eggs> 0 %}
-        <img src="{{ url_for('static', filename='images/egg2.png') }}" alt="Dragon Egg" class="ontop-img">
+        <img src="{{ url_for('static', filename='images/egg2.webp') }}" alt="Dragon Egg" class="ontop-img">
         <form action="{{ url_for('inventory_eggs') }}" method="POST" style=" text-align: center;">
         <button type="submit" class="meie-script-regular btn btn-outline-light mt-2">Click to hatch!</button>
         </form>

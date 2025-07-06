@@ -10,7 +10,7 @@
             <h1 class="fantasy-welcome">{{current_user.username}}'s Eggs 𖹭</h1>
             {% if dragon %}
                 <p class="sevillana-regular" style="color:#722323">You hatched a {{ dragon.rarity }} dragon: <strong>{{ dragon.name }}</strong>!</p>
-                <img src="{{ url_for('static', filename='dragons/'dragon.webp') }}" width="200" alt="{{ dragon.name }}">
+                <img src="{{ url_for('static', filename='dragons/' ~ dragon.name | lower ~ '.webp') }}" width="200" alt="{{ dragon.name }}">
             {% endif %}
         </div>
 <div class="px-4 pt-0 mt-4 text-center">

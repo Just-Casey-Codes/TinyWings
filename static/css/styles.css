@@ -28,12 +28,7 @@ color: #FF9898 !important;
 .container {
     display: flex;
     flex-wrap: wrap;
-}
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow-x: hidden;
+
 }
 body {
   display: flex;
@@ -43,23 +38,6 @@ body {
   background-image: url("../images/clouds.webp");
   background-size: cover;
   background-repeat: no-repeat;
-}
-main {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
-  width: 100%;
-}
-
-main.flex-fill {
-  flex: 1 1 auto;
-}
-@media (max-width: 768px) {
-  main {
-    max-width: 100%;
-    margin: 0;
-    padding: 1rem;
-  }
 }
 @media (max-width: 768px) {
   header, footer {
@@ -105,7 +83,16 @@ ul {
 .btn:hover {
     background-color: #FFD8D8 !important;
 }
+main {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  width: 100%;
+}
 
+main.flex-fill {
+  flex: 1 1 auto;
+}
 .card {
 	background-image: url("../images/clouds.webp") !important;
 	cursor: pointer;
@@ -127,24 +114,6 @@ ul {
   justify-content: center;
   z-index: 0;
   position: relative;
-}
-@media (max-width: 768px) {
-  .card {
-    max-width: 100%;
-    height: auto;
-    min-height: 300px;
-  }
-@media (max-width: 768px) {
-  .carousel-item {
-    height: auto;
-    flex-direction: column;
-  }
-}
-
-.carousel-item {
-    height: auto;
-    padding: 1rem 0;
-  }
 }
 .carousel-inner {
   position: relative;

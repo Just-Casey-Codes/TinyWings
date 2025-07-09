@@ -313,6 +313,7 @@ def buy_item(user_id,item_id):
     toy = UserInventory.query.filter_by(user_id=user_id, item_type='toy').first()
     egg = UserInventory.query.filter_by(user_id=user_id, item_type='Egg').first()
     seed = UserInventory.query.filter_by(user_id=user_id, item_type='seed').first()
+    meds = UserInventory.query.filter_by(user_id=user_id, item_type='medicine').first()
     item_to_buy = db.session.execute(db.select(Shop).where(Shop.id == item_id)).scalar()
     if item_to_buy.item == "food":
         if food and food.quantity > 0:
@@ -320,6 +321,12 @@ def buy_item(user_id,item_id):
         else:
             new_food = UserInventory(user_id=user_id, item_type="food",item_name="food",quantity=1)
             db.session.add(new_food)
+    if item_to_buy.item == "meds":
+        if meds and meds.quantity > 0:
+            meds.quantity += 1
+        else:
+            new_meds = UserInventory(user_id=user_id, item_type="medicine",item_name="medicine",quantity=1)
+            db.session.add(new_meds)
     if item_to_buy.item == "toy":
         if toy and toy.quantity > 0:
             toy.quantity += 1
@@ -345,12 +352,18 @@ def sell_item(user_id,item_id):
     toy = UserInventory.query.filter_by(user_id=user_id, item_type='toy').first()
     egg = UserInventory.query.filter_by(user_id=user_id, item_type='Egg').first()
     seed = UserInventory.query.filter_by(user_id=user_id, item_type='seed').first()
+    meds = UserInventory.query.filter_by(user_id=user_id, item_type='medicine').first()
     item_to_sell = db.session.execute(db.select(Shop).where(Shop.id == item_id)).scalar()
     if item_to_sell.item == "food":
         if food and food.quantity > 0:
             food.quantity -= 1
             if food.quantity == 0:
                 db.session.delete(food)
+    if item_to_sell.item == "meds":
+        if meds and meds.quantity > 0:
+            meds.quantity -= 1
+            if meds.quantity == 0:
+                db.session.delete(meds)
     if item_to_sell.item == "toy":
         if toy and toy.quantity > 0:
             toy.quantity -= 1
@@ -682,8 +695,6 @@ def claim_reward():
                 "name": dragon.name,
                 "time_left": time_left,
             })
-    print(dragons_back)
-    print(dragons_still_busy)
     return render_template('claim-reward.html',rewards=reward,dragon_back=dragons_back,
                            dragons_busy=dragons_still_busy)
 

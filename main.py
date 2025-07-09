@@ -152,8 +152,9 @@ def daily_login():
                     current_user.login_streak = 0
             else:
                 current_user.login_streak = 1
-
             current_user.last_login_reward = today
+        elif current_user.last_login_reward == today:
+            return "Gotten daily reward already"
     else:
         current_user.last_login_reward = today
         current_user.login_streak = 0

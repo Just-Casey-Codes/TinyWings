@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     {% block styles %}
         {{ bootstrap.load_css() }}
@@ -27,7 +27,7 @@
       {% endif %}
     {% endwith %}
 
-    <main class="flex-fill">
+    <main class="container">
         {% block content %}{% endblock %}
     </main>
 

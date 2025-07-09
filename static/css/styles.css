@@ -41,7 +41,7 @@ body {
 }
 @media (max-width: 768px) {
   header, footer {
-    width: 100vw;
+    width: 100%;
   }
 }
 .page-wrapper {
@@ -495,5 +495,5 @@ main.flex-fill {
   margin-left: 4.5rem;
 }
 .header, .footer {
-  width: 100%;
+  width: 100% !important;
 }

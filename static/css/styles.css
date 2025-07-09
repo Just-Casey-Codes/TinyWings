@@ -28,7 +28,12 @@ color: #FF9898 !important;
 .container {
     display: flex;
     flex-wrap: wrap;
-
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
 }
 body {
   display: flex;
@@ -39,6 +44,23 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
 }
+main {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  width: 100%;
+}
+
+main.flex-fill {
+  flex: 1 1 auto;
+}
+@media (max-width: 768px) {
+  main {
+    max-width: 100%;
+    margin: 0;
+    padding: 1rem;
+  }
+}
 @media (max-width: 768px) {
   header, footer {
     width: 100%;
@@ -48,7 +70,9 @@ body {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
+
 .logged-screen {
   background-image: url("/static/images/castle.png") !important;
   background-size: cover !important;
@@ -81,14 +105,7 @@ ul {
 .btn:hover {
     background-color: #FFD8D8 !important;
 }
-main {
-max-width: 800px;
-margin: 2rem auto;
-padding: 1rem;
-}
-main.flex-fill {
-  flex: 1 1 auto;
-}
+
 .card {
 	background-image: url("../images/clouds.webp") !important;
 	cursor: pointer;

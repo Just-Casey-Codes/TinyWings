@@ -726,10 +726,11 @@ def inventory():
     users_toy_count = get_user_toy_count(user_id)
     users_seed_count = get_user_seed_count(user_id)
     users_egg_count = get_user_egg_count(user_id)
+    users_meds_count = get_user_meds_count(user_id)
     user = db.session.execute(db.select(User).where(User.id == user_id)).scalar()
     coins = user.coins
     return render_template('inventory.html', eggs=users_egg_count,food=users_food_count,
-                           toy=users_toy_count,seed=users_seed_count,coins=coins)
+                           toy=users_toy_count,seed=users_seed_count,coins=coins,meds=users_meds_count)
 
 @app.route("/inventory/eggs",methods =["GET","POST"])
 @login_required

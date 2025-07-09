@@ -3,14 +3,18 @@
 {% block title %}Sign in{% endblock %}
 {% include 'header.html' %}
 {% block content %}
+<main>
 <div class="container-fluid">
   <div class="col-sm-12 col-md-8">
   <div class="row">
     <div class="col-sm-12 col-md-8">
-    <h1 class=" sevillana-regular h3 mb-3 fw-normal">♡ Welcome back ♡</h1>
+      <div class="welcome-banner">
+  <h1 class="fantasy-welcome">♡ Welcome back ♡</h1>
+</div>
     {{ render_form(sign_in)}}
 </div>
   </div>
   </div>
 </div>
+  </main>
 {% endblock %}

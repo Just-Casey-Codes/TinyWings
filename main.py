@@ -667,35 +667,6 @@ def inventory_eggs():
 @app.route("/carefor",methods=["GET","POST"])
 @login_required
 def care_for():
-    who = request.args.get("dragon")
-    print(f"🌟 Requested dragon: {who}")
-
-    if not who:
-        flash("No dragon selected.", "danger")
-        return redirect(url_for("user_dragons"))
-
-    dragon_info = db.session.execute(
-        db.select(Dragons).where(func.lower(Dragons.name) == func.lower(who.strip()))
-    ).scalar()
-
-    print("📦 dragon_info:", dragon_info)
-
-    if not dragon_info:
-        flash(f"No dragon named '{who}' found in Dragons table.", "danger")
-        return redirect(url_for("user_dragons"))
-
-    dragon_owned = db.session.execute(
-        db.select(DragonsOwned).where(
-            DragonsOwned.dragon_id == dragon_info.id,
-            DragonsOwned.user_id == current_user.id
-        )
-    ).scalar()
-
-    print("🎒 dragon_owned:", dragon_owned)
-
-    if not dragon_owned:
-        flash("You don't own this dragon.", "danger")
-        return redirect(url_for("user_dragons"))
     if request.method == "POST":
         action = request.form.get("action")
         which_dragon = request.form.get("dragon")

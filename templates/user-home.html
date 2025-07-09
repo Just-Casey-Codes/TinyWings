@@ -30,7 +30,10 @@
       <div class="col-md-11">
 <div class="welcome-banner">
   <h1 class="fantasy-welcome">Welcome home, {{ current_user.username }}! 💗</h1>
-  <p class="fantasy-subtext">Your dragons have been waiting patiently... </p>
+  <p class="fantasy-subtext">Your dragons have been waiting patiently...
+  <br> Login streak: {{user.login_streak}}, you gained {10 + user.login_streak * 2} coins!
+      <br> { 7 - user.login_streak } more days to earn an egg!
+  </p>
 </div>
 <div class="px-4 pt-0 mt-4 text-center">
     <img src="{{ url_for('static', filename='images/welcome-home.webp')}}" width=800 class=" img-fluid  rounded-3 mb-1" alt="Home" loading="lazy" >

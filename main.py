@@ -12,9 +12,9 @@ from wtforms import StringField, SubmitField, SelectField, PasswordField
 from wtforms.validators import DataRequired, URL, Email, ValidationError
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, Float, ForeignKey, DateTime, func
+from sqlalchemy import Integer, String, Float, ForeignKey, DateTime, func, Date
 import random
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta, date
 
 load_dotenv()
 app = Flask(__name__)
@@ -52,7 +52,10 @@ class User(db.Model,UserMixin):
     password: Mapped[str] = mapped_column(String(100))
     username: Mapped[str] = mapped_column(String(1000),unique=True)
     coins: Mapped[int] = mapped_column(Integer)
+    last_login_reward = db.Column(Date)
+    login_streak = db.Column(Integer, default=0)
     dragons: Mapped[list["DragonsOwned"]] = relationship("DragonsOwned", back_populates="user")
+
 
 class DragonsOwned(db.Model):
     id: Mapped[int] = mapped_column(Integer,primary_key=True)
@@ -121,6 +124,34 @@ class SignIn(FlaskForm):
     username = StringField('Username',validators=[DataRequired()])
     password = PasswordField('Password',validators=[DataRequired()])
     submit = SubmitField('Login ♡')
+
+def daily_login():
+    today = date.today()
+    user_id = current_user.id
+    if user_id.last_login_reward:
+        if user_id.last_login_reward != today:
+            yesterday = today - timedelta(days=1)
+            if user_id.last_login_reward == yesterday:
+                user_id.login_streak += 1
+                if user_id.login_streak == 7:
+                    egg = UserInventory.query.filter_by(user_id=user_id, item_type='Egg').first()
+                    if egg and egg.quantity > 0:
+                        egg.quantity += 1
+                    else:
+                        new_egg = UserInventory(user_id=user_id, item_type="Egg", item_name="dragon egg", quantity=1)
+                        db.session.add(new_egg)
+                    user_id.login_streak = 0
+            else:
+                user_id.login_streak = 1
+
+            user_id.last_login_reward = today
+    else:
+        user_id.last_login_reward = today
+        user_id.login_streak = 0
+
+    user_id.coins += 10 + (user_id.login_streak * 2)
+    db.session.commit()
+
 
 def get_random_dragon():
     all_dragons = Dragons.query.all()
@@ -378,9 +409,6 @@ def get_reward(user_id,level):
     db.session.commit()
     return reward
 
-def send_dragon(user_id,dragon_id):
-    pass
-
 @login_manager.user_loader
 def load_user(user_id):
     return db.get_or_404(User, user_id)
@@ -452,7 +480,10 @@ def register():
 @app.route("/yourhome")
 @login_required
 def user_home():
-    return render_template("user-home.html")
+    user_id = current_user.id
+    daily_login()
+    user = db.session.execute(db.select(User).where(User.id == user_id)).scalar()
+    return render_template("user-home.html", user =user)
 
 @app.route("/missions",methods=["POST","GET"])
 @login_required

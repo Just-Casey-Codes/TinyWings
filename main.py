@@ -544,6 +544,11 @@ def missions():
         .where(DragonsOwned.user_id == current_user.id)
         .where(DragonsOwned.sick == "yes")
     ).scalars().all()
+    sick_dragons = db.session.execute(
+        db.select(Dragons)
+        .select_from(DragonsOwned)
+        .where(DragonsOwned.user_id == user_id)
+        .where(DragonsOwned.dragon_id.in_(sick_dragon_ids)).join(Dragons)).scalars().all()
 
     users_dragons_free = (db.session.execute(
         db.select(DragonsOwned)
@@ -601,7 +606,7 @@ def missions():
         return redirect(url_for('missions'))
 
     return render_template('missions.html',user_dragons=free_dragons_json,
-                           busy_dragons=busy_dragons,sick_dragons=sick_dragon_ids)
+                           busy_dragons=busy_dragons,sick_dragons=sick_dragons)
 
 @app.route("/claim_reward", methods=["POST","GET"])
 @login_required

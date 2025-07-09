@@ -67,6 +67,7 @@ class DragonsOwned(db.Model):
     happiness: Mapped[int] = mapped_column(Integer, nullable=False, server_default="100")
     last_fed: Mapped[datetime] = mapped_column(DateTime,  nullable=True)
     last_played: Mapped[datetime] = mapped_column(DateTime,  nullable=True)
+    sick: Mapped[str] = mapped_column(String)
     dragon_obj: Mapped["Dragons"] = relationship("Dragons", back_populates="owned_by")
 
 class UserInventory(db.Model):
@@ -112,6 +113,14 @@ with app.app_context():
             dragon.last_fed = datetime.utcnow()
         if dragon.last_played is None:
             dragon.last_played = datetime.utcnow()
+    db.session.commit()
+
+with app.app_context():
+    sick_dragons = DragonsOwned.query.filter(
+        (DragonsOwned.sick == None)).all()
+    for dragon in sick_dragons:
+        if dragon.sick is None:
+            dragon.sick = "no"
     db.session.commit()
 
 class Register(FlaskForm):

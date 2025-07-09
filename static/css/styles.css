@@ -107,26 +107,26 @@ ul {
 }
 
 .card {
-  background-image: url("../images/clouds.webp") !important;
-  background-size: cover;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  perspective: 1000px;
-  margin: 1rem auto;
-  position: relative;
-
-  width: 100%;
-  max-width: 400px;
-  height: 600px;
+	background-image: url("../images/clouds.webp") !important;
+	cursor: pointer;
+	background-size: cover;
+    background-repeat: no-repeat;
+	width: calc(33% - 3rem);
+	min-width: calc(33% - 3rem);
+	height: 600px;
+	width: 400px;
+	min-height: 400px;
+	perspective: 1000px;
+	margin: 1rem auto;
+	position: relative;
 }
-
 .carousel-item {
+  height: 700px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 0;
   position: relative;
-  height: 700px;
 }
 @media (max-width: 768px) {
   .card {

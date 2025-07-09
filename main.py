@@ -67,7 +67,7 @@ class DragonsOwned(db.Model):
     happiness: Mapped[int] = mapped_column(Integer, nullable=False, server_default="100")
     last_fed: Mapped[datetime] = mapped_column(DateTime,  nullable=True)
     last_played: Mapped[datetime] = mapped_column(DateTime,  nullable=True)
-    sick: Mapped[str] = mapped_column(String)
+    sick: Mapped[str] = mapped_column(String(5), default="no")
     dragon_obj: Mapped["Dragons"] = relationship("Dragons", back_populates="owned_by")
 
 class UserInventory(db.Model):

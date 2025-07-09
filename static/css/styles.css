@@ -52,6 +52,9 @@ body {
 footer {
     position: relative;
 }
+ul {
+    list-style-type: none;
+}
 .hatching-page {
     background-image: url("../images/who-will-hatch.png") !important;
     background-size: cover;

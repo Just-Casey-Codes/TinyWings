@@ -128,28 +128,28 @@ class SignIn(FlaskForm):
 def daily_login():
     today = date.today()
     user_id = current_user.id
-    if user_id.last_login_reward:
-        if user_id.last_login_reward != today:
+    if current_user.last_login_reward:
+        if current_user.last_login_reward != today:
             yesterday = today - timedelta(days=1)
-            if user_id.last_login_reward == yesterday:
-                user_id.login_streak += 1
-                if user_id.login_streak == 7:
+            if current_user.last_login_reward == yesterday:
+                current_user.login_streak += 1
+                if current_user.login_streak == 7:
                     egg = UserInventory.query.filter_by(user_id=user_id, item_type='Egg').first()
                     if egg and egg.quantity > 0:
                         egg.quantity += 1
                     else:
                         new_egg = UserInventory(user_id=user_id, item_type="Egg", item_name="dragon egg", quantity=1)
                         db.session.add(new_egg)
-                    user_id.login_streak = 0
+                    current_user.login_streak = 0
             else:
-                user_id.login_streak = 1
+                current_user.login_streak = 1
 
-            user_id.last_login_reward = today
+            current_user.last_login_reward = today
     else:
-        user_id.last_login_reward = today
-        user_id.login_streak = 0
+        current_user.last_login_reward = today
+        current_user.login_streak = 0
 
-    user_id.coins += 10 + (user_id.login_streak * 2)
+    current_user.coins += 10 + (current_user.login_streak * 2)
     db.session.commit()
 
 

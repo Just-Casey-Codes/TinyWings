@@ -31,9 +31,9 @@
     <div class="carousel-inner">
         {% for dragon in dragons %}
         <div class="carousel-item {% if loop.first %}active{% endif %}">
-            <div class="container">
+            <div class="w-100 px-3">
                 <div class="carousel-caption text-start">
-                      <div class="card" >
+                      <div class="card w-100 border-0 bg-transparent" >
                             <div class="front">
                                 <video src="{{ url_for('static', filename=dragon.front_card_url) }}"
                                    muted
@@ -45,7 +45,7 @@
                                 Your browser does not support the video tag.
                             </video>
                         </div>
-                        <div class="back">
+                        <div class="back w-100 border-0 bg-transparent">
                             <img src="{{ url_for('static', filename=dragon.back_card_url) }}">
                         </div>
                     </div>

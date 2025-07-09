@@ -48,6 +48,11 @@
   <input type="hidden" name="dragon" value="{{ dragon.name }}">
   <button type="submit" class="btn btn-primary" id="play-button">Play</button>
 </form>
+    <form method="POST" action="{{ url_for('care_for') }}">
+  <input type="hidden" name="action" value="medicine">
+  <input type="hidden" name="dragon" value="{{ dragon.name }}">
+  <button type="submit" class="btn btn-primary" id="medicine-button">Play</button>
+</form>
 </div>
 </div>
 </div>

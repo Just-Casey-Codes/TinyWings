@@ -218,6 +218,10 @@ def get_user_toy_count(user_id):
     toy = UserInventory.query.filter_by(user_id=user_id,item_type="toy").first()
     return toy.quantity if toy else 0
 
+def get_user_meds_count(user_id):
+    meds = UserInventory.query.filter_by(user_id=user_id,item_type="medicine").first()
+    return meds.quantity if meds else 0
+
 def feed(user_id,dragon_id):
     food = UserInventory.query.filter_by(user_id=user_id, item_type='food').first()
     dragon = db.session.execute(db.select(DragonsOwned).where(DragonsOwned.dragon_id==dragon_id)).scalar()
@@ -240,6 +244,24 @@ def play(user_id,dragon_id):
         dragon.last_played = datetime.now()
         if toy.quantity == 0:
             db.session.delete(toy)
+        db.session.commit()
+        return "yes"
+    return None
+
+def sick(dragon_id):
+    dragon = db.session.execute(db.select(DragonsOwned).where(DragonsOwned.dragon_id == dragon_id)).scalar()
+    if dragon.hunger == 0:
+        dragon.sick = "yes"
+    db.session.commit()
+
+def cure(user_id,dragon_id):
+    meds = UserInventory.query.filter_by(user_id=user_id, item_type='medicine').first()
+    dragon = db.session.execute(db.select(DragonsOwned).where(DragonsOwned.dragon_id==dragon_id)).scalar()
+    if meds and meds.quantity > 0:
+        meds.quantity -= 1
+        dragon.sick = "no"
+        if meds.quantity == 0:
+            db.session.delete(meds)
         db.session.commit()
         return "yes"
     return None
@@ -494,6 +516,11 @@ def missions():
         .where(Missions.user_id == current_user.id)
         .where(Missions.dragon_on_mission == "yes")
     ).scalars().all()
+    sick_dragon_ids = db.session.execute(
+        db.select(DragonsOwned.dragon_id)
+        .where(DragonsOwned.user_id == current_user.id)
+        .where(DragonsOwned.sick == "yes")
+    ).scalars().all()
 
     users_dragons_free = (db.session.execute(
         db.select(DragonsOwned)
@@ -504,7 +531,9 @@ def missions():
         db.select(Dragons)
         .select_from(DragonsOwned)
         .where(DragonsOwned.user_id == user_id)
-        .where(DragonsOwned.dragon_id.notin_(busy_dragon_ids)).join(Dragons)).scalars().all()
+        .where(DragonsOwned.dragon_id.notin_(busy_dragon_ids))
+        .where(DragonsOwned.dragon_id.notin_(sick_dragon_ids))
+        .join(Dragons)).scalars().all()
 
     free_dragons_json = []
     for drag in dragons_names:
@@ -520,7 +549,6 @@ def missions():
         .where(DragonsOwned.user_id == user_id)
         .where(DragonsOwned.dragon_id.in_(busy_dragon_ids)).join(Dragons)).scalars().all()
 
-    print(f"busy: {busy_dragons}")
     if request.method == "POST":
         region = request.form.get("region")
         dragon_sent_id = int(request.form.get("dragon_id"))
@@ -550,7 +578,7 @@ def missions():
         return redirect(url_for('missions'))
 
     return render_template('missions.html',user_dragons=free_dragons_json,
-                           busy_dragons=busy_dragons,)
+                           busy_dragons=busy_dragons,sick_dragons=sick_dragon_ids)
 
 @app.route("/claim_reward", methods=["POST","GET"])
 @login_required
@@ -723,6 +751,14 @@ def care_for():
                                        dragon=caring_for,show_script = True, action_done="play",name=lower_drag_name)
             else:
                 flash("You need a toy!")
+        if action == "medicine":
+            meds = cure(user_id=current_user.id,dragon_id=dragon_owned.dragon_id)
+            if meds:
+                flash(f"{caring_for.name} feels much better!")
+                return render_template('care-for.html',care=dragon_owned,
+                                       dragon=caring_for,show_script = True,action_done="medicine",name=lower_drag_name)
+            else:
+                flash("You have no medicine!")
         return render_template('care-for.html',care=dragon_owned,
                                dragon=caring_for,show_script=True)
     who = request.args.get("dragon")
@@ -733,6 +769,7 @@ def care_for():
                                       (DragonsOwned.dragon_id == dragon_info.id)).scalar()
     update_dragon_hunger(dragon_owned)
     update_dragon_happiness(dragon_owned)
+    sick(dragon_owned.dragon_id)
     return render_template('care-for.html',care=dragon_owned,
                            dragon=dragon_info, show_script=True,name=who)
 
@@ -747,11 +784,11 @@ def store():
     users_toy_count = get_user_toy_count(user_id)
     users_seed_count = get_user_seed_count(user_id)
     users_egg_count = get_user_egg_count(user_id)
+    users_meds_count = get_user_meds_count(user_id)
     if request.method == "POST":
         item_id = int(request.form.get("item_id"))
         action = request.form.get("action")
         item = db.session.execute(db.select(Shop).where(Shop.id == item_id)).scalar()
-        print(f"item: {item}")
         if action == "buy":
             if user_coins > item.item_price:
                 user_coins -= item.item_price
@@ -791,6 +828,15 @@ def store():
                     flash("You don't have any seeds!")
             elif item.item == "egg":
                 if users_egg_count > 0:
+                    sell_item(user_id, item_id)
+                    user_coins += item.item_price
+                    user_coins_update = db.session.execute(db.select(User).where(User.id == user_id)).scalar()
+                    user_coins_update.coins = user_coins
+                    db.session.commit()
+                else:
+                    flash("You don't have any eggs!")
+            elif item.item == "medicine":
+                if users_meds_count > 0:
                     sell_item(user_id, item_id)
                     user_coins += item.item_price
                     user_coins_update = db.session.execute(db.select(User).where(User.id == user_id)).scalar()

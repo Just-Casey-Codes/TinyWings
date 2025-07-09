@@ -38,6 +38,14 @@
     </div>
   {% endfor %}
 {% endif %}
+    {% if sick_dragons %}
+  <p class="fantasy-subtext">Dragons too sick to go on a Mission:</p>
+  {% for dragon in sick_dragons %}
+    <div>
+    <p class="fantasy-subtext">{{ dragon.name }}</p>
+    </div>
+  {% endfor %}
+{% endif %}
 </div>
 <div class="px-4 pt-0 mt-0 text-center">
     <a href="{{url_for('claim_reward')}}">

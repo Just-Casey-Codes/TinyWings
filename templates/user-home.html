@@ -31,7 +31,7 @@
 <div class="welcome-banner">
   <h1 class="fantasy-welcome">Welcome home, {{ current_user.username }}! 💗</h1>
   <p class="fantasy-subtext">Your dragons have been waiting patiently...
-  <br> Login streak: {{current_user.login_streak}}, you gained {{10 + current_user.login_streak * 2}} coins!
+  <br> Login streak: {{current_user.login_streak}}, you gained {{10 + current_user.login_streak * 10}} coins!
       <br> {{ 7 - current_user.login_streak }} more days to earn an egg!
   </p>
     {% if current_user.is_confirmed == False %}

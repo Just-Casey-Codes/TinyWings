@@ -31,7 +31,7 @@ MAIL_PORT = 465
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
 MAIL_DEBUG = False
-s = Serializer(os.environ.get("SECRET_KEY"))
+s = Serializer(app.config("SECRET_KEY"))
 Bootstrap5(app)
 login_manager.init_app(app)
 mail = Mail(app)

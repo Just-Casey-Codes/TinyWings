@@ -37,6 +37,7 @@
     {% if current_user.is_confirmed == False %}
     <p class="fantasy-subtext">Confirm your email address for 200 coins!
   </p>
+    {% endif %}
 </div>
 <div class="px-4 pt-0 mt-4 text-center">
     <img src="{{ url_for('static', filename='images/welcome-home.webp')}}" width=800 class=" img-fluid  rounded-3 mb-1" alt="Home" loading="lazy" >

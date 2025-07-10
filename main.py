@@ -617,7 +617,7 @@ def confirm_email(token):
         flash("The confirmation link is invalid or has expired.", "danger")
     return redirect(url_for("user_home"))
 
-@app.route("/yourhome")
+@app.route("/yourhome",methods=["GET", "POST"])
 @login_required
 def user_home():
     token = generate_token(current_user.email)

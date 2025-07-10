@@ -609,6 +609,7 @@ def confirm_email(token):
         user.is_confirmed = True
         user.confirmed_on = datetime.now()
         db.session.add(user)
+        current_user.coins += 100
         db.session.commit()
         flash("You have confirmed your account. Thanks!", "success")
     else:
@@ -617,7 +618,6 @@ def confirm_email(token):
 
 @app.route("/yourhome")
 @login_required
-@check_is_confirmed
 def user_home():
     user_id = current_user.id
     daily_login()

@@ -603,7 +603,7 @@ def confirm_email(token):
         email = confirm_token(token)
     except:
         flash("The confirmation link is invalid or has expired.", "danger")
-        return redirect(url_for("login"))
+        return redirect(url_for("inactive"))
 
     user = User.query.filter_by(email=email).first_or_404()
 

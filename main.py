@@ -554,7 +554,7 @@ def inactive():
 def resend_confirmation():
     if current_user.is_confirmed:
         flash("Your account has already been confirmed.", "success")
-        return redirect(url_for("core.home"))
+        return redirect(url_for("user_home"))
     token = generate_token(current_user.email)
     confirm_url = url_for("confirm_email", token=token, _external=True)
     html = render_template("accounts/confirm_email.html", confirm_url=confirm_url)
@@ -597,6 +597,7 @@ def register():
         return render_template('user-home.html',username=username)
     return render_template('register.html',sign_up=sign_up)
 
+
 @app.route("/confirm/<token>")
 @login_required
 def confirm_email(token):
@@ -611,7 +612,7 @@ def confirm_email(token):
         db.session.add(user)
         current_user.coins += 100
         db.session.commit()
-        flash("You have confirmed your account. Thanks!", "success")
+        flash("You have confirmed your account. Thanks! Have 100 coins!", "success")
     else:
         flash("The confirmation link is invalid or has expired.", "danger")
     return redirect(url_for("user_home"))
@@ -619,6 +620,12 @@ def confirm_email(token):
 @app.route("/yourhome")
 @login_required
 def user_home():
+    token = generate_token(current_user.email)
+    confirm_url = url_for("confirm_email", token=token, _external=True)
+    html = render_template("confirm_email.html", confirm_url=confirm_url)
+    subject = "Please confirm your email"
+    send_email(current_user.email, subject, html)
+    flash("A confirmation email has been sent via email.", "success")
     user_id = current_user.id
     daily_login()
     user = db.session.execute(db.select(User).where(User.id == user_id)).scalar()

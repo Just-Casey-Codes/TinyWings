@@ -34,8 +34,10 @@
   <br> Login streak: {{user.login_streak}}, you gained {{10 + user.login_streak * 2}} coins!
       <br> {{ 7 - user.login_streak }} more days to earn an egg!
   </p>
+    {% if user.is_confirmed == False %}
     <p class="fantasy-subtext">Confirm your email address for 200 coins
   <br> <a href="{{url_for('confirm_email')}}"> </a>
+        {% endif %}
   </p>
 </div>
 <div class="px-4 pt-0 mt-4 text-center">

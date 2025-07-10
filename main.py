@@ -335,6 +335,7 @@ def plant(user_id):
 
 def update_dragon_hunger(dragon):
     now = datetime.now()
+    print(f"Before update: hunger={dragon.hunger}, last_fed={dragon.last_fed}")
     if dragon.last_fed is None:
         dragon.last_fed = now
         db.session.commit()
@@ -342,6 +343,7 @@ def update_dragon_hunger(dragon):
     decay_rate_per_hour = 5
     decay = int(elapsed / 3600 * decay_rate_per_hour)
     new_hunger = max(0, dragon.hunger - decay)
+    print(f"Elapsed: {elapsed}s → decay: {decay}, new hunger: {new_hunger}")
     if new_hunger != dragon.hunger:
         dragon.hunger = new_hunger
         db.session.commit()

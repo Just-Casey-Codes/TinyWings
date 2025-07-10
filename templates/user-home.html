@@ -35,9 +35,7 @@
       <br> {{ 7 - current_user.login_streak }} more days to earn an egg!
   </p>
     {% if current_user.is_confirmed == False %}
-    <p class="fantasy-subtext">Confirm your email address for 200 coins
-  <br> <a href="{{url_for('confirm_email',token = token)}}">Click here to confirm your email </a>
-        {% endif %}
+    <p class="fantasy-subtext">Confirm your email address for 200 coins!
   </p>
 </div>
 <div class="px-4 pt-0 mt-4 text-center">

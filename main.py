@@ -902,8 +902,11 @@ def care_for():
                                        dragon=caring_for,show_script = True,action_done="medicine",name=lower_drag_name)
             else:
                 flash("You have no medicine!")
-        return render_template('care-for.html',care=dragon_owned,
-                               dragon=caring_for,show_script=True)
+        sick(dragon_owned.dragon_id)
+        db.session.refresh(dragon_owned)
+        return render_template('care-for.html', care=dragon_owned,
+                               dragon=caring_for, show_script=True,
+                               action_done=action, name=lower_drag_name)
     who = request.args.get("dragon")
     dragon_info = db.session.execute(
         db.select(Dragons).where(func.lower(Dragons.name) == who.lower())

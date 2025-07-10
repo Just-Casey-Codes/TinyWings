@@ -157,9 +157,9 @@ with app.app_context():
         (DragonsOwned.last_fed == None) | (DragonsOwned.last_played == None)).all()
     for dragon in dragons:
         if dragon.last_fed is None:
-            dragon.last_fed = datetime.utcnow()
+            dragon.last_fed = datetime.now()
         if dragon.last_played is None:
-            dragon.last_played = datetime.utcnow()
+            dragon.last_played = datetime.now()
     db.session.commit()
 
 with app.app_context():
@@ -335,6 +335,9 @@ def plant(user_id):
 
 def update_dragon_hunger(dragon):
     now = datetime.now()
+    if dragon.last_fed is None:
+        dragon.last_fed = now
+        db.session.commit()
     elapsed = (now - dragon.last_fed).total_seconds()
     decay_rate_per_hour = 5
     decay = int(elapsed / 3600 * decay_rate_per_hour)
@@ -346,6 +349,9 @@ def update_dragon_hunger(dragon):
 
 def update_dragon_happiness(dragon):
     now = datetime.now()
+    if dragon.last_played is None:
+        dragon.last_fed = now
+        db.session.commit()
     elapsed = (now - dragon.last_played).total_seconds()
     decay_rate_per_hour = 5
     decay = int(elapsed / 3600 * decay_rate_per_hour)
@@ -730,7 +736,7 @@ def claim_reward():
     dragons_still_busy = []
     for mission in dragons_busy:
         if mission.region == "farm" or mission.region == "mushroom-forest":
-            now = datetime.utcnow()
+            now = datetime.now()
             time_elapsed = (now - mission.time_started).total_seconds()
             if time_elapsed > 2000:
                 mission.dragon_on_mission = "no"
@@ -742,7 +748,7 @@ def claim_reward():
                 dragons_back.append(dragon_back)
                 reward.append(new_reward)
         elif mission.region == "pond" or mission.region == "sleeping-forest":
-            now = datetime.utcnow()
+            now = datetime.now()
             time_elapsed = (now - mission.time_started).total_seconds()
             if time_elapsed > 3600:
                 mission.dragon_on_mission = "no"
@@ -754,7 +760,7 @@ def claim_reward():
                 dragons_back.append(dragon_back)
                 reward.append(new_reward)
         elif mission.region == "wishing-well" or mission.region == "crystal-peaks":
-            now = datetime.utcnow()
+            now = datetime.now()
             time_elapsed = (now - mission.time_started).total_seconds()
             if time_elapsed > 7200:
                 mission.dragon_on_mission = "no"
@@ -766,7 +772,7 @@ def claim_reward():
                 dragons_back.append(dragon_back)
                 reward.append(new_reward)
         elif mission.region == "open-field":
-            now = datetime.utcnow()
+            now = datetime.now()
             time_elapsed = (now - mission.time_started).total_seconds()
             if time_elapsed > 3600:
                 mission.dragon_on_mission = "no"
@@ -784,7 +790,7 @@ def claim_reward():
                 dragons_back.append(dragon_back)
                 reward.append(new_reward)
     for mission in dragons_busy:
-        now = datetime.utcnow()
+        now = datetime.now()
         time_elapsed = (now - mission.time_started).total_seconds()
         required_time = 0
         if mission.region in ["farm", "mushroom-forest"]:
@@ -983,7 +989,7 @@ def store():
 @app.route("/farm",methods=["GET","POST"])
 @login_required
 def farm():
-    now = datetime.utcnow()
+    now = datetime.now()
     state = db.session.execute(
         db.select(PlantState).where(PlantState.user_id == current_user.id)
     ).scalar()
@@ -1020,7 +1026,7 @@ def farm():
                 db.session.add(new_item)
                 db.session.commit()
     if state.planted_at and not state.harvested:
-        time_since_planted = (datetime.utcnow() - state.planted_at).total_seconds()
+        time_since_planted = (datetime.now() - state.planted_at).total_seconds()
         if time_since_planted >= 30:
             button_text = "Harvest"
             time_left = 0

@@ -627,7 +627,7 @@ def user_home():
         html = render_template("accounts/confirm_email.html", confirm_url=confirm_url)
         subject = "Please confirm your email"
         send_email(current_user.email, subject, html)
-        flash("A confirmation email has been sent via email.", "success")
+        flash("A confirmation email has been sent.", "success")
     user_id = current_user.id
     daily_login()
     user = db.session.execute(db.select(User).where(User.id == user_id)).scalar()

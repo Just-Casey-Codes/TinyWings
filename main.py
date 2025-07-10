@@ -594,7 +594,7 @@ def register():
         db.session.add(starting_egg)
         db.session.commit()
         login_user(new_user)
-        return render_template('user-home.html',username=username)
+        return render_template('user-home.html',username=username,token=token)
     return render_template('register.html',sign_up=sign_up)
 
 @app.route("/confirm/<token>")

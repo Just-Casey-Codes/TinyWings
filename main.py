@@ -904,6 +904,7 @@ def care_for():
                 flash("You have no medicine!")
         sick(dragon_owned.dragon_id)
         db.session.refresh(dragon_owned)
+        print(f"DRAGON SICK STATUS:, {dragon_owned.sick}")
         return render_template('care-for.html', care=dragon_owned,
                                dragon=caring_for, show_script=True,
                                action_done=action, name=lower_drag_name)
@@ -917,6 +918,7 @@ def care_for():
     update_dragon_happiness(dragon_owned)
     sick(dragon_owned.dragon_id)
     db.session.refresh(dragon_owned)
+    print(f"DRAGON SICK STATUS:, {dragon_owned.sick}")
     return render_template('care-for.html',care=dragon_owned,
                            dragon=dragon_info, show_script=True,name=who)
 

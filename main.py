@@ -706,13 +706,13 @@ def missions():
                 user_id=user_id,
                 dragon_id=dragon_sent_id,
                 dragon_on_mission="yes",
-                time_started=datetime.utcnow(),
+                time_started=datetime.now(),
                 region=region,
             )
             db.session.add(dragon_sent)
         else:
             dragon_sent.dragon_on_mission = "yes"
-            dragon_sent.time_started = datetime.utcnow()
+            dragon_sent.time_started = datetime.now()
             dragon_sent.region = region
 
         db.session.commit()

@@ -310,7 +310,7 @@ def sick(dragon_id):
     dragon = db.session.execute(db.select(DragonsOwned).where(DragonsOwned.dragon_id == dragon_id)).scalar()
     if dragon.hunger == 0:
         dragon.sick = "yes"
-    db.session.commit()
+        db.session.commit()
 
 def cure(user_id,dragon_id):
     meds = UserInventory.query.filter_by(user_id=user_id, item_type='medicine').first()

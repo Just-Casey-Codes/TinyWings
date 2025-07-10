@@ -15,9 +15,6 @@
 </script>
 
 <div class="container-fluid">
-<div class="justify-content-center align-items-center">
-    <img src="../static/images/dragons-of2.webp" width="400">
-    </div>
 <div class="small-banner">
         <h3 class="fantasy-welcome">Gently hover to awaken the hatchling... </h3>
         <h5 class="fantasy-subtext ">Click to reveal their magical story </h5>
@@ -26,7 +23,9 @@
 <div id="myCarousel" class="carousel slide mb-6 pointer-event" data-bs-ride="carousel">
     <div class="carousel-indicators">
         {% for dragon in dragons %}
-        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="{{ loop.index0 }}" data-slide-index="{{ loop.index0 }}" {% if loop.first %}class="active" aria-current="true"{% endif %}></button>
+        <button type="button" data-bs-target="#myCarousel"
+                data-bs-slide-to="{{ loop.index0 }}" data-slide-index="{{ loop.index0 }}"
+                {% if loop.first %}class="active" aria-current="true"{% endif %}></button>
         {% endfor %}
     </div>
     <div class="carousel-inner">

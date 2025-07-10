@@ -597,28 +597,26 @@ def register():
         return render_template('user-home.html',username=username)
     return render_template('register.html',sign_up=sign_up)
 
-
 @app.route("/confirm/<token>")
-@login_required
 def confirm_email(token):
-    if current_user.is_confirmed:
-        flash("Account already confirmed.", "success")
-        return redirect(url_for("user_home"))
-    email = confirm_token(token)
-    if email != current_user.email:
+    try:
+        email = confirm_token(token)
+    except:
         flash("The confirmation link is invalid or has expired.", "danger")
-        return redirect(url_for("resend_confirmation"))
-    user = User.query.filter_by(email=current_user.email).first_or_404()
-    if user.email == email:
-        user.is_confirmed = True
-        user.confirmed_on = datetime.now()
-        db.session.add(user)
-        user.coins += 100
-        db.session.commit()
-        flash("You have confirmed your account. Thanks! Have 100 coins!", "success")
-    else:
-        flash("The confirmation link is invalid or has expired.", "danger")
-    return redirect(url_for("user_home"))
+        return redirect(url_for("login"))
+
+    user = User.query.filter_by(email=email).first_or_404()
+
+    if user.is_confirmed:
+        flash("Account already confirmed. Please log in.", "info")
+        return redirect(url_for("login"))
+
+    user.is_confirmed = True
+    user.confirmed_on = datetime.now()
+    user.coins += 100
+    db.session.commit()
+    flash("You have confirmed your account. Thanks! You earned 100 coins!", "success")
+    return redirect(url_for("login"))
 
 @app.route("/yourhome")
 @login_required
@@ -626,7 +624,7 @@ def user_home():
     if not current_user.is_confirmed:
         token = generate_token(current_user.email)
         confirm_url = url_for("confirm_email", token=token, _external=True)
-        html = render_template("confirm_email.html", confirm_url=confirm_url)
+        html = render_template("accounts/confirm_email.html", confirm_url=confirm_url)
         subject = "Please confirm your email"
         send_email(current_user.email, subject, html)
         flash("A confirmation email has been sent via email.", "success")

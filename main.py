@@ -903,8 +903,10 @@ def care_for():
             else:
                 flash("You have no medicine!")
         sick(dragon_owned.dragon_id)
+        test_drag_sick = db.session.execute(db.select(DragonsOwned).where(DragonsOwned.dragon_id ==dragon_owned.dragon_id)).scalar()
+        is_sick = test_drag_sick.sick
         db.session.refresh(dragon_owned)
-        print(f"DRAGON SICK STATUS:, {dragon_owned.sick}")
+        print(f"DRAGON SICK STATUS:, {is_sick}")
         return render_template('care-for.html', care=dragon_owned,
                                dragon=caring_for, show_script=True,
                                action_done=action, name=lower_drag_name)

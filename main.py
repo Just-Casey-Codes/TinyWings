@@ -350,7 +350,7 @@ def update_dragon_hunger(dragon):
 def update_dragon_happiness(dragon):
     now = datetime.now()
     if dragon.last_played is None:
-        dragon.last_fed = now
+        dragon.last_played = now
         db.session.commit()
     elapsed = (now - dragon.last_played).total_seconds()
     decay_rate_per_hour = 5
@@ -874,7 +874,7 @@ def care_for():
             food = feed(user_id=current_user.id,dragon_id= dragon_owned.dragon_id)
             if food:
                 flash(f"{caring_for.name} loved that!")
-                update_dragon_hunger(dragon_owned)
+                db.session.refresh(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,
                                        dragon=caring_for,show_script = True,action_done="feed",name=lower_drag_name)
             else:
@@ -883,7 +883,7 @@ def care_for():
             toy = play(user_id=current_user.id,dragon_id= dragon_owned.dragon_id)
             if toy:
                 flash(f"{caring_for.name} had so much fun!")
-                update_dragon_happiness(dragon_owned)
+                db.session.refresh(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,
                                        dragon=caring_for,show_script = True, action_done="play",name=lower_drag_name)
             else:
@@ -892,6 +892,7 @@ def care_for():
             meds = cure(user_id=current_user.id,dragon_id=dragon_owned.dragon_id)
             if meds:
                 flash(f"{caring_for.name} feels much better!")
+                db.session.refresh(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,
                                        dragon=caring_for,show_script = True,action_done="medicine",name=lower_drag_name)
             else:
@@ -907,6 +908,7 @@ def care_for():
     update_dragon_hunger(dragon_owned)
     update_dragon_happiness(dragon_owned)
     sick(dragon_owned.dragon_id)
+    db.session.refresh(dragon_owned)
     return render_template('care-for.html',care=dragon_owned,
                            dragon=dragon_info, show_script=True,name=who)
 

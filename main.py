@@ -22,7 +22,7 @@ load_dotenv()
 app = Flask(__name__)
 login_manager = LoginManager()
 app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY")
-SECRET_KEY = os.environ.get("SECRET_KEY")
+app.config["SECURITY_PASSWORD_SALT"]= os.environ.get("SECRET_KEY")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_TO_SEND =os.environ.get("EMAIL_USER")
 MAIL_DEFAULT_SENDER = "noreply@flask.com"

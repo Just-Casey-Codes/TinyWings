@@ -23,6 +23,7 @@ app = Flask(__name__)
 login_manager = LoginManager()
 app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY")
 app.config["SECURITY_PASSWORD_SALT"]= os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_TO_SEND =os.environ.get("EMAIL_USER")
 MAIL_DEFAULT_SENDER = "noreply@flask.com"
@@ -31,7 +32,7 @@ MAIL_PORT = 465
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
 MAIL_DEBUG = False
-s = Serializer(app.config("SECRET_KEY"))
+s = Serializer(SECRET_KEY)
 Bootstrap5(app)
 login_manager.init_app(app)
 mail = Mail(app)

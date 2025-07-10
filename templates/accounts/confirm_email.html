@@ -8,6 +8,10 @@
       <div class="welcome-banner">
   <h1 class="fantasy-welcome">Please activate your account through the following link</h1>
         <p class="fantasy-subtext"><a href="{{ confirm_url }}">{{ confirm_url }}</a></p>
+          <p class="fantasy-subtext">
+    Didn't get the email?
+    <a href="{{ url_for('resend_confirmation') }}">Resend</a>.
+  </p>
 </div>
   </div>
 </div>

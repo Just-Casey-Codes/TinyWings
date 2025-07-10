@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+{% block title %}Sign in{% endblock %}
+{% include 'header.html' %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+      <div class="welcome-banner">
+  <h1 class="fantasy-welcome">Please activate your account through the following link</h1>
+        <p class="fantasy-subtext"><a href="{{ confirm_url }}">{{ confirm_url }}</a></p>
+</div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,8 +1,10 @@
 from email.policy import default
 import gunicorn
+from itsdangerous import URLSafeTimedSerializer, Serializer, URLSafeSerializer
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
 from dotenv import load_dotenv
 import os
+from flask_mail import Mail, Message
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
@@ -20,8 +22,50 @@ load_dotenv()
 app = Flask(__name__)
 login_manager = LoginManager()
 app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
+EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
+EMAIL_TO_SEND =os.environ.get("EMAIL_USER")
+MAIL_DEFAULT_SENDER = "noreply@flask.com"
+MAIL_SERVER = "smtp.gmail.com"
+MAIL_PORT = 465
+MAIL_USE_TLS = False
+MAIL_USE_SSL = True
+MAIL_DEBUG = False
+s = Serializer(SECRET_KEY)
 Bootstrap5(app)
 login_manager.init_app(app)
+mail = Mail(app)
+
+def generate_token(email):
+    serializer = URLSafeTimedSerializer(app.config["SECRET_KEY"])
+    return serializer.dumps(email, salt=app.config["SECURITY_PASSWORD_SALT"])
+
+def confirm_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(app.config["SECRET_KEY"])
+    try:
+        email = serializer.loads(
+            token, salt=app.config["SECURITY_PASSWORD_SALT"], max_age=expiration
+        )
+        return email
+    except Exception:
+        return False
+
+def send_email(to, subject, template):
+    msg = Message(
+        subject,
+        recipients=[to],
+        html=template,
+        sender=MAIL_DEFAULT_SENDER,
+    )
+    mail.send(msg)
+def check_is_confirmed(func):
+    def decorated_function(*args, **kwargs):
+        if current_user.is_confirmed is False:
+            flash("Please confirm your account!", "warning")
+            return redirect(url_for("accounts.inactive"))
+        return func(*args, **kwargs)
+
+    return decorated_function
 
 class Base(DeclarativeBase):
     pass
@@ -54,6 +98,9 @@ class User(db.Model,UserMixin):
     coins: Mapped[int] = mapped_column(Integer)
     last_login_reward = db.Column(Date)
     login_streak = db.Column(Integer, default=0)
+    is_admin = db.Column(db.Boolean, nullable=False, default=False)
+    is_confirmed = db.Column(db.Boolean, nullable=False, default=False)
+    confirmed_on = db.Column(db.DateTime, nullable=True)
     dragons: Mapped[list["DragonsOwned"]] = relationship("DragonsOwned", back_populates="user")
 
 
@@ -495,6 +542,27 @@ def login():
             return redirect(url_for('user_home'))
     return render_template('sign-in.html',sign_in=sign_in)
 
+@app.route("/inactive")
+@login_required
+def inactive():
+    if current_user.is_confirmed:
+        return redirect(url_for("user_home"))
+    return render_template("accounts/inactive.html")
+
+@app.route("/resend")
+@login_required
+def resend_confirmation():
+    if current_user.is_confirmed:
+        flash("Your account has already been confirmed.", "success")
+        return redirect(url_for("core.home"))
+    token = generate_token(current_user.email)
+    confirm_url = url_for("confirm_email", token=token, _external=True)
+    html = render_template("accounts/confirm_email.html", confirm_url=confirm_url)
+    subject = "Please confirm your email"
+    send_email(current_user.email, subject, html)
+    flash("A new confirmation email has been sent.", "success")
+    return redirect(url_for("inactive"))
+
 @app.route("/register",methods=["GET","POST"])
 def register():
     sign_up = Register()
@@ -515,6 +583,13 @@ def register():
         new_user = User(username=username,email=email,password=hash_salted_password,coins=100)
         db.session.add(new_user)
         db.session.commit()
+
+        token = generate_token(new_user.email)
+        confirm_url = url_for("confirm_email", token=token, _external=True)
+        html = render_template("confirm_email.html", confirm_url=confirm_url)
+        subject = "Please confirm your email"
+        send_email(new_user.email, subject, html)
+        flash("A confirmation email has been sent via email.", "success")
         starting_egg = UserInventory(user_id=new_user.id, item_type="Egg", item_name="Dragon Egg", quantity=1)
         db.session.add(starting_egg)
         db.session.commit()
@@ -522,8 +597,27 @@ def register():
         return render_template('user-home.html',username=username)
     return render_template('register.html',sign_up=sign_up)
 
+@app.route("/confirm/<token>")
+@login_required
+def confirm_email(token):
+    if current_user.is_confirmed:
+        flash("Account already confirmed.", "success")
+        return redirect(url_for("user_home"))
+    email = confirm_token(token)
+    user = User.query.filter_by(email=current_user.email).first_or_404()
+    if user.email == email:
+        user.is_confirmed = True
+        user.confirmed_on = datetime.now()
+        db.session.add(user)
+        db.session.commit()
+        flash("You have confirmed your account. Thanks!", "success")
+    else:
+        flash("The confirmation link is invalid or has expired.", "danger")
+    return redirect(url_for("user_home"))
+
 @app.route("/yourhome")
 @login_required
+@check_is_confirmed
 def user_home():
     user_id = current_user.id
     daily_login()

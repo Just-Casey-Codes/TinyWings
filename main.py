@@ -621,10 +621,18 @@ def confirm_email(token):
 @app.route("/yourhome")
 @login_required
 def user_home():
+    token = None
+    if not current_user.is_confirmed:
+        token = generate_token(current_user.email)
+        confirm_url = url_for("confirm_email", token=token, _external=True)
+        html = render_template("accounts/confirm_email.html", confirm_url=confirm_url)
+        subject = "Please confirm your email"
+        send_email(current_user.email, subject, html)
+        flash("A confirmation email has been sent.", "success")
     user_id = current_user.id
     daily_login()
     user = db.session.execute(db.select(User).where(User.id == user_id)).scalar()
-    return render_template("user-home.html", user =user)
+    return render_template("user-home.html", user =user, token=token)
 
 @app.route("/missions",methods=["POST","GET"])
 @login_required

@@ -159,7 +159,7 @@ def daily_login():
         current_user.last_login_reward = today
         current_user.login_streak = 0
 
-    current_user.coins += 10 + (current_user.login_streak * 2)
+    current_user.coins += 10 + (current_user.login_streak * 10)
     db.session.commit()
 
 

@@ -873,12 +873,17 @@ def care_for():
         dragon_owned = db.session.execute(db.select(DragonsOwned).where
                                           (DragonsOwned.dragon_id == caring_for.id)).scalar()
         lower_drag_name = caring_for.name.lower()
+        sick_dragon = db.session.execute(
+            db.select(DragonsOwned)
+            .where(DragonsOwned.user_id == current_user.id)
+            .where(DragonsOwned.sick == "yes")
+            .where(DragonsOwned.dragon_id == caring_for.id)
+        ).scalar()
         if action == "feed":
             food = feed(user_id=current_user.id,dragon_id= dragon_owned.dragon_id)
             if food:
                 flash(f"{caring_for.name} loved that!")
                 db.session.refresh(dragon_owned)
-                sick(dragon_owned.dragon_id)
                 return render_template('care-for.html',care=dragon_owned,
                                        dragon=caring_for,show_script = True,action_done="feed",name=lower_drag_name)
             else:
@@ -887,7 +892,6 @@ def care_for():
             toy = play(user_id=current_user.id,dragon_id= dragon_owned.dragon_id)
             if toy:
                 flash(f"{caring_for.name} had so much fun!")
-                sick(dragon_owned.dragon_id)
                 db.session.refresh(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,
                                        dragon=caring_for,show_script = True, action_done="play",name=lower_drag_name)
@@ -902,14 +906,11 @@ def care_for():
                                        dragon=caring_for,show_script = True,action_done="medicine",name=lower_drag_name)
             else:
                 flash("You have no medicine!")
-        sick(dragon_owned.dragon_id)
-        test_drag_sick = db.session.execute(db.select(DragonsOwned).where(DragonsOwned.dragon_id ==dragon_owned.dragon_id)).scalar()
-        is_sick = test_drag_sick.sick
         db.session.refresh(dragon_owned)
-        print(f"DRAGON SICK STATUS:, {is_sick}")
+        print(f"DRAGON SICK STATUS:, {sick_dragon.sick}")
         return render_template('care-for.html', care=dragon_owned,
                                dragon=caring_for, show_script=True,
-                               action_done=action, name=lower_drag_name)
+                               action_done=action, name=lower_drag_name,sick = sick_dragon)
     who = request.args.get("dragon")
     dragon_info = db.session.execute(
         db.select(Dragons).where(func.lower(Dragons.name) == who.lower())

@@ -878,6 +878,7 @@ def care_for():
             if food:
                 flash(f"{caring_for.name} loved that!")
                 db.session.refresh(dragon_owned)
+                sick(dragon_owned.dragon_id)
                 return render_template('care-for.html',care=dragon_owned,
                                        dragon=caring_for,show_script = True,action_done="feed",name=lower_drag_name)
             else:
@@ -886,6 +887,7 @@ def care_for():
             toy = play(user_id=current_user.id,dragon_id= dragon_owned.dragon_id)
             if toy:
                 flash(f"{caring_for.name} had so much fun!")
+                sick(dragon_owned.dragon_id)
                 db.session.refresh(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,
                                        dragon=caring_for,show_script = True, action_done="play",name=lower_drag_name)

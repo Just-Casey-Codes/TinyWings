@@ -27,11 +27,11 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_TO_SEND =os.environ.get("EMAIL_USER")
 MAIL_DEFAULT_SENDER = "noreply@flask.com"
-MAIL_SERVER = "smtp.gmail.com"
-MAIL_PORT = 465
-MAIL_USE_TLS = False
-MAIL_USE_SSL = True
-MAIL_DEBUG = False
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv("EMAIL_USER")
+app.config['MAIL_PASSWORD'] = os.getenv("EMAIL_PASSWORD")
 Bootstrap5(app)
 login_manager.init_app(app)
 mail = Mail(app)

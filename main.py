@@ -289,6 +289,7 @@ def feed(user_id,dragon_id):
         if food.quantity == 0:
             db.session.delete(food)
         db.session.commit()
+        db.session.refresh(dragon)
         return "yes"
     return None
 

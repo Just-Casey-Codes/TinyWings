@@ -879,7 +879,7 @@ def care_for():
             .where(DragonsOwned.sick == "yes")
             .where(DragonsOwned.dragon_id == caring_for.id)
         ).scalar()
-        print(f"DRAGON SICK STATUS:, {sick_dragon} : {sick_dragon.sick}")
+        print(f"DRAGON SICK STATUS:, {sick_dragon} and {sick_dragon.sick}")
         if action == "feed":
             food = feed(user_id=current_user.id,dragon_id= dragon_owned.dragon_id)
             if food:
@@ -908,7 +908,7 @@ def care_for():
             else:
                 flash("You have no medicine!")
         db.session.refresh(dragon_owned)
-        print(f"DRAGON SICK STATUS:, {sick_dragon} : {sick_dragon.sick}")
+        print(f"DRAGON SICK STATUS:, {sick_dragon} and {sick_dragon.sick}")
         return render_template('care-for.html', care=dragon_owned,
                                dragon=caring_for, show_script=True,
                                action_done=action, name=lower_drag_name,sick = sick_dragon)

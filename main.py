@@ -927,6 +927,8 @@ def care_for():
         if action == "feed":
             food = feed(user_id=current_user.id,dragon_id= dragon_owned.dragon_id)
             if food:
+                update_dragon_hunger(dragon_owned)
+                update_dragon_happiness(dragon_owned)
                 flash(f"{caring_for.name} loved that!")
                 db.session.refresh(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,
@@ -936,6 +938,8 @@ def care_for():
         if action == "play":
             toy = play(user_id=current_user.id,dragon_id= dragon_owned.dragon_id)
             if toy:
+                update_dragon_hunger(dragon_owned)
+                update_dragon_happiness(dragon_owned)
                 flash(f"{caring_for.name} had so much fun!")
                 db.session.refresh(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,
@@ -945,6 +949,8 @@ def care_for():
         if action == "medicine":
             meds = cure(user_id=current_user.id,dragon_id=dragon_owned.dragon_id)
             if meds:
+                update_dragon_hunger(dragon_owned)
+                update_dragon_happiness(dragon_owned)
                 flash(f"{caring_for.name} feels much better!")
                 db.session.refresh(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,

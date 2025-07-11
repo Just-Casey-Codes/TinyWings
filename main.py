@@ -326,6 +326,7 @@ def cure(user_id,dragon_id):
             db.session.delete(meds)
         db.session.commit()
         db.session.refresh(dragon)
+        print(f"draong: {dragon}, been cured? sick: {dragon.sick}")
         return "yes"
     return None
 
@@ -913,7 +914,6 @@ def care_for():
             else:
                 flash("You have no medicine!")
         db.session.refresh(dragon_owned)
-        print(f"DRAGON SICK STATUS:, {sick_dragon} and {sick_dragon.sick}")
         return render_template('care-for.html', care=dragon_owned,
                                dragon=caring_for, show_script=True,
                                action_done=action, name=lower_drag_name,sick = sick_dragon)
@@ -933,7 +933,6 @@ def care_for():
         .where(DragonsOwned.sick == "yes")
         .where(DragonsOwned.dragon_id == dragon_info.id)
     ).scalar()
-    print(f"DRAGON SICK STATUS:, {dragon_owned.sick} sick: {sick_dragon.sick}")
     return render_template('care-for.html',care=dragon_owned,
                            dragon=dragon_info, show_script=True,name=who,sick=sick_dragon)
 

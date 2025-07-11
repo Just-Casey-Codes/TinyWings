@@ -316,7 +316,8 @@ def cure(user_id,dragon_id):
     meds = UserInventory.query.filter_by(user_id=user_id, item_type='medicine').first()
     dragon = db.session.execute(
         db.select(DragonsOwned).where(DragonsOwned.dragon_id == dragon_id)
-    ).scalar_one_or_none()
+        .where(DragonsOwned.user_id == user_id)
+    ).scalar()
     print(f"draong: {dragon}, sick {dragon.sick}")
     if meds and meds.quantity > 0:
         meds.quantity -= 1

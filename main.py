@@ -930,7 +930,7 @@ def care_for():
     ).scalar()
     print(f"DRAGON SICK STATUS:, {dragon_owned.sick} sick: {sick_dragon.sick}")
     return render_template('care-for.html',care=dragon_owned,
-                           dragon=dragon_info, show_script=True,name=who)
+                           dragon=dragon_info, show_script=True,name=who,sick=sick_dragon)
 
 @app.route("/store",methods=["GET","POST"])
 @login_required

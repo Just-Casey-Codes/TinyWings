@@ -558,7 +558,7 @@ def reset_password():
         return redirect(url_for("reset_password"))
     return render_template('accounts/reset_password.html',form=form)
 
-@app.route("/confirm_password_reset/<token>")
+@app.route("/confirm_password_reset/<token>",methods=["GET","POST"])
 def confirm_password_reset(token):
     try:
         email = confirm_token(token)

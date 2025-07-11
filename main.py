@@ -387,7 +387,7 @@ def buy_item(user_id,item_id):
         else:
             new_food = UserInventory(user_id=user_id, item_type="food",item_name="food",quantity=1)
             db.session.add(new_food)
-    if item_to_buy.item == "meds":
+    if item_to_buy.item == "medicine":
         if meds and meds.quantity > 0:
             meds.quantity += 1
         else:
@@ -425,7 +425,7 @@ def sell_item(user_id,item_id):
             food.quantity -= 1
             if food.quantity == 0:
                 db.session.delete(food)
-    if item_to_sell.item == "meds":
+    if item_to_sell.item == "medicine":
         if meds and meds.quantity > 0:
             meds.quantity -= 1
             if meds.quantity == 0:

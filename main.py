@@ -922,7 +922,13 @@ def care_for():
     update_dragon_happiness(dragon_owned)
     sick(dragon_owned.dragon_id)
     db.session.refresh(dragon_owned)
-    print(f"DRAGON SICK STATUS:, {dragon_owned.sick}")
+    sick_dragon = db.session.execute(
+        db.select(DragonsOwned)
+        .where(DragonsOwned.user_id == current_user.id)
+        .where(DragonsOwned.sick == "yes")
+        .where(DragonsOwned.dragon_id == dragon_info.id)
+    ).scalar()
+    print(f"DRAGON SICK STATUS:, {dragon_owned.sick} sick: {sick_dragon}")
     return render_template('care-for.html',care=dragon_owned,
                            dragon=dragon_info, show_script=True,name=who)
 

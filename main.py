@@ -885,7 +885,6 @@ def care_for():
             .where(DragonsOwned.sick == "yes")
             .where(DragonsOwned.dragon_id == caring_for.id)
         ).scalar()
-        print(f"DRAGON SICK STATUS:, {sick_dragon} and {sick_dragon.sick}")
         if action == "feed":
             food = feed(user_id=current_user.id,dragon_id= dragon_owned.dragon_id)
             if food:

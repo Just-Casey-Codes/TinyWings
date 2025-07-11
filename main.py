@@ -314,13 +314,14 @@ def sick(dragon_id):
 
 def cure(user_id,dragon_id):
     meds = UserInventory.query.filter_by(user_id=user_id, item_type='medicine').first()
-    dragon = db.session.execute(db.select(DragonsOwned).where(DragonsOwned.dragon_id==dragon_id)).scalar()
+    dragon = DragonsOwned.query.get(dragon_id)
     if meds and meds.quantity > 0:
         meds.quantity -= 1
         dragon.sick = "no"
         if meds.quantity == 0:
             db.session.delete(meds)
         db.session.commit()
+        db.session.refresh(dragon)
         return "yes"
     return None
 

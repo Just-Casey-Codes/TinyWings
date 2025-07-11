@@ -11,7 +11,7 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_migrate import Migrate
 from wtforms import StringField, SubmitField, SelectField, PasswordField
-from wtforms.validators import DataRequired, URL, Email, ValidationError
+from wtforms.validators import DataRequired, URL, Email, ValidationError, EqualTo
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Float, ForeignKey, DateTime, func, Date
@@ -49,6 +49,7 @@ def confirm_token(token, expiration=3600):
         return email
     except Exception:
         return False
+
 
 def send_email(to, subject, template):
     msg = Message(
@@ -103,7 +104,6 @@ class User(db.Model,UserMixin):
     confirmed_on = db.Column(db.DateTime, nullable=True)
     dragons: Mapped[list["DragonsOwned"]] = relationship("DragonsOwned", back_populates="user")
 
-
 class DragonsOwned(db.Model):
     id: Mapped[int] = mapped_column(Integer,primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
@@ -147,11 +147,6 @@ class Shop(db.Model):
 with app.app_context():
     db.create_all()
 
-# with app.app_context():
-#     new_item = Shop(item="egg",item_price=4000)
-#     db.session.add(new_item)
-#     db.session.commit()
-
 with app.app_context():
     dragons = DragonsOwned.query.filter(
         (DragonsOwned.last_fed == None) | (DragonsOwned.last_played == None)).all()
@@ -180,6 +175,15 @@ class SignIn(FlaskForm):
     username = StringField('Username',validators=[DataRequired()])
     password = PasswordField('Password',validators=[DataRequired()])
     submit = SubmitField('Login ♡')
+
+class RequestResetPassword(FlaskForm):
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    submit = SubmitField('Request Password reset')
+
+class ResetPassword(FlaskForm):
+    password = PasswordField('Password',validators=[DataRequired()])
+    password2 = PasswordField('Repeat Password',validators=[DataRequired(),EqualTo('password')])
+    submit = SubmitField('Confirm New Password')
 
 def daily_login():
     today = date.today()
@@ -537,6 +541,40 @@ def dragons():
     with app.app_context():
         all_dragons = db.session.execute(db.select(Cards).order_by(Cards.id)).scalars().all()
     return render_template('dragons.html',dragons=all_dragons)
+
+@app.route("/reset_password",methods=["GET","POST"])
+def reset_password():
+    form = RequestResetPassword()
+    if form.validate_on_submit():
+        user = db.session.execute(db.select(User). where(User.email == form.email.data)).scalar()
+        if user:
+            reset_password_url = url_for("reset_password",
+                                         token=user.generate_reset_password_token(), user_id=user.id,
+                                         _external=True)
+            html = render_template("accounts/reset_password_email.html", confirm_url=reset_password_url)
+            subject = "Password Reset Request"
+            send_email(user.email, subject, html)
+        flash("A baby dragon just delivered your password reset scroll—check your email! 🐲💌")
+        return redirect(url_for("reset_password"))
+    return render_template('accounts/reset_password.html',form=form)
+
+@app.route("/confirm_password_reset/<token>")
+def confirm_password_reset(token):
+    try:
+        email = confirm_token(token)
+    except:
+        flash("The confirmation link is invalid or has expired.", "danger")
+        return redirect(url_for("reset_password"))
+
+    user = User.query.filter_by(email=email).first_or_404()
+    form = ResetPassword()
+    if form.validate_on_submit():
+        password = form.password.data
+        hash_salted_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
+        user.password = hash_salted_password
+        db.session.commit()
+    flash("You have reset your password!", "success")
+    return redirect(url_for("login"))
 
 @app.route("/login",methods=["GET","POST"])
 def login():

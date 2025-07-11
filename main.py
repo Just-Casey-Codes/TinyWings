@@ -549,7 +549,7 @@ def reset_password():
         user = db.session.execute(db.select(User). where(User.email == form.email.data)).scalar()
         if user:
             reset_password_url = url_for("reset_password",
-                                         token=user.generate_reset_password_token(), user_id=user.id,
+                                         token=user.generate_token(user.email), user_id=user.id,
                                          _external=True)
             html = render_template("accounts/reset_password_email.html", confirm_url=reset_password_url)
             subject = "Password Reset Request"

@@ -573,8 +573,9 @@ def confirm_password_reset(token):
         hash_salted_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
         user.password = hash_salted_password
         db.session.commit()
-    flash("You have reset your password!", "success")
-    return redirect(url_for("login"))
+        flash("You have reset your password!", "success")
+        return redirect(url_for("login"))
+    return render_template('accounts/reset_password.html',form = form)
 
 @app.route("/login",methods=["GET","POST"])
 def login():

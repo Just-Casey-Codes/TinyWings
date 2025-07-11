@@ -886,7 +886,7 @@ def care_for():
                 flash(f"{caring_for.name} loved that!")
                 db.session.refresh(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,
-                                       dragon=caring_for,show_script = True,action_done="feed",name=lower_drag_name)
+                                       dragon=caring_for,show_script = True,action_done="feed",name=lower_drag_name,sick=sick_dragon)
             else:
                 flash("You have no food!")
         if action == "play":
@@ -895,7 +895,7 @@ def care_for():
                 flash(f"{caring_for.name} had so much fun!")
                 db.session.refresh(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,
-                                       dragon=caring_for,show_script = True, action_done="play",name=lower_drag_name)
+                                       dragon=caring_for,show_script = True, action_done="play",name=lower_drag_name,sick=sick_dragon)
             else:
                 flash("You need a toy!")
         if action == "medicine":
@@ -904,7 +904,7 @@ def care_for():
                 flash(f"{caring_for.name} feels much better!")
                 db.session.refresh(dragon_owned)
                 return render_template('care-for.html',care=dragon_owned,
-                                       dragon=caring_for,show_script = True,action_done="medicine",name=lower_drag_name)
+                                       dragon=caring_for,show_script = True,action_done="medicine",name=lower_drag_name,sick=None)
             else:
                 flash("You have no medicine!")
         db.session.refresh(dragon_owned)

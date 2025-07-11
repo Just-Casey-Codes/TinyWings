@@ -928,7 +928,7 @@ def care_for():
         .where(DragonsOwned.sick == "yes")
         .where(DragonsOwned.dragon_id == dragon_info.id)
     ).scalar()
-    print(f"DRAGON SICK STATUS:, {dragon_owned.sick} sick: {sick_dragon}")
+    print(f"DRAGON SICK STATUS:, {dragon_owned.sick} sick: {sick_dragon.sick}")
     return render_template('care-for.html',care=dragon_owned,
                            dragon=dragon_info, show_script=True,name=who)
 

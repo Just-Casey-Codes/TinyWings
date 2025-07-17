@@ -344,20 +344,25 @@ def plant(user_id):
         return "yes"
     return None
 
+
 def update_dragon_hunger(dragon):
     now = datetime.now()
-    print(f"Before update: hunger={dragon.hunger}, last_fed={dragon.last_fed}")
     if dragon.last_fed is None:
         dragon.last_fed = now
         db.session.commit()
-    elapsed = (now - dragon.last_fed).total_seconds()
-    decay_rate_per_hour = 5
-    decay = int(elapsed / 3600 * decay_rate_per_hour)
-    new_hunger = max(0, dragon.hunger - decay)
-    print(f"Elapsed: {elapsed}s → decay: {decay}, new hunger: {new_hunger}")
-    if new_hunger != dragon.hunger:
-        dragon.hunger = new_hunger
-        db.session.commit()
+        return dragon.hunger
+
+    elapsed_hours = (now - dragon.last_fed).total_seconds() / 3600
+    DECAY_PER_HOUR = 5
+    decayed_amount = elapsed_hours * DECAY_PER_HOUR
+    updated_hunger = max(0, int(dragon.hunger - decayed_amount))
+
+    if updated_hunger == dragon.hunger:
+        return dragon.hunger
+    dragon.hunger = updated_hunger
+    hours_applied = (dragon.hunger - updated_hunger) / DECAY_PER_HOUR
+    dragon.last_fed = dragon.last_fed + timedelta(hours=hours_applied)
+    db.session.commit()
     return dragon.hunger
 
 def update_dragon_happiness(dragon):
@@ -365,13 +370,19 @@ def update_dragon_happiness(dragon):
     if dragon.last_played is None:
         dragon.last_played = now
         db.session.commit()
-    elapsed = (now - dragon.last_played).total_seconds()
-    decay_rate_per_hour = 5
-    decay = int(elapsed / 3600 * decay_rate_per_hour)
-    new_happiness = max(0, dragon.happiness - decay)
-    if new_happiness != dragon.happiness:
-        dragon.happiness = new_happiness
-        db.session.commit()
+        return dragon.last.played
+
+    elapsed_hours = (now - dragon.last_played).total_seconds() / 3600
+    DECAY_PER_HOUR = 5
+    decayed_amount = elapsed_hours * DECAY_PER_HOUR
+    updated_happiness = max(0, int(dragon.happiness - decayed_amount))
+
+    if updated_happiness == dragon.happiness:
+        return dragon.happiness
+    dragon.happiness = updated_happiness
+    hours_applied = (dragon.happiness - updated_happiness) / DECAY_PER_HOUR
+    dragon.last_played = dragon.last_played + timedelta(hours=hours_applied)
+    db.session.commit()
     return dragon.happiness
 
 def buy_item(user_id,item_id):
